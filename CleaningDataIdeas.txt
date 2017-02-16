@@ -1,0 +1,6 @@
+Cleaning Data Ideas:
+-Are the coordinates properly formatted?
+-Can we complete data that is missing with complementary files?
+-Boundary Check. We are not sure on whether to eliminate the data outside boundaries.
+Is it a low percentage of bridges are outside boundaries?
+Check whether this bridges are important?
