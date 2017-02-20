@@ -1,0 +1,35 @@
+TO DO dataclean:
+
+converting data  (Cynta + Erin)
+---------------------------------------------
+
+- convert HTML to CSV
+
+Finding errors (Juan + Ellen)
+--------------------------------------------
+
+- Match roads and bridges coordinates
+	- road does not exist (ID)
+	- Bridge ID does not exist
+	- Coordinates don't match
+		- bridge error
+		- road error
+
+Fixing errors   (Tony)
+------------------------------------------
+- Boundary (X,Y)
+
+- Switch (X,Y)
+
+- interpolate (type errors)
+
+Removing    (Tony)
+-------------------------------------------
+
+- Boundary (last error remove check?)
+
+Report (Erin + Cynta)
+-------------------------------------------
+- Code  (Erin)
+
+- 150 words about each step  (Cynta)
