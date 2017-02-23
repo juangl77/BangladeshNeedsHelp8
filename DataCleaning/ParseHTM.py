@@ -13,6 +13,9 @@ class RoadEntry():
     latitude = -1
     longitude = -1
 
+    def isEmpty(self):
+        return (self.latitude == -1 and self.longitude == -1 and self.roadChainage == -1 and self.lrpNumber == '')
+
 class Bridge():
     bridgeId = ''
     roadId = ''
@@ -35,11 +38,11 @@ class Bridge():
     longitude = -1
     bcsTotalScore = -1
 
-    def isBridgeEmpty(self):
+    def isEmpty(self):
         return (self.latitude == -1 and self.longitude == -1 and self.locationChainage == -1 and self.locationLrpOffset == -1 and self.spanNumber == -1
                 and self.constructionYear == -1 and self.width == -1 and self.length == -1 and self.bridgeId == '' and self.roadId == '')
 
-def convertRoadInfo():
+def parseRoadInfo():
     print('Entering road data parsing.')
 
     roadRoot = '.lrps.htm'
@@ -56,6 +59,9 @@ def convertRoadInfo():
             headerRow = parsed.body.find(text=re.compile(r'LRP No')).parent.parent.parent
             newRoad = []
             roadId = filename[:-9]
+
+            print ('Active: {}'.format(roadId), end="\r")
+
             for row in headerRow.next_siblings:
                 if (row.name == 'tr'):
                     cells = row.contents
@@ -66,27 +72,32 @@ def convertRoadInfo():
                     try:
                         newEntry.roadChainage = float(cells[5].text.strip())
                     except ValueError:
-                        print('Couldn\'t convert chainage to float for road {} (value is \'{}\'). Ignoring row.'.format(roadId, cells[5].text.strip()))
-                        break
+                        print('Couldn\'t convert chainage to float for road {} (value is \'{}\').'.format(roadId, cells[5].text.strip()))
 
                     newEntry.lrpType = cells[7].text.strip()
                     newEntry.desc = cells[9].text.strip()
                     try:
                         newEntry.latitude = float(cells[11].text.strip())
                     except ValueError:
-                        print('Couldn\'t convert latitude to float for road {}. Ignoring row.'.format(roadId))
-                        break
+                        print('Couldn\'t convert latitude to float for road {} (value is \'{}\').'.format(roadId,cells[11].text.strip()))
                     try:
                         newEntry.longitude = float(cells[13].text.strip())
                     except ValueError:
-                        print('Couldn\'t convert longitude to float for road {}. Ignoring row.'.format(roadId))
-                        break
+                        print('Couldn\'t convert longitude to float for road {} (value is \'{}\').'.format(roadId,cells[13].text.strip()))
 
                     newRoad.append(newEntry)
                 else:
                     continue
 
             #Road is constructed, save to file
+            isEmptyRoad = True
+            for entry in newRoad:
+                if not entry.isEmpty():
+                    isEmptyRoad = False
+            if isEmptyRoad:
+                print('Skipping empty road {}'.format(roadId))
+                continue
+
             allRoads.append(newRoad)
             csvFile = filename.replace(' ', '')[:-4].upper()
             with open(roadDirectory+'CSV/'+csvFile+'.csv', 'w') as csvfile:
@@ -100,9 +111,9 @@ def convertRoadInfo():
         for road in allRoads:
             writer.writerows((entry.roadId,entry.lrpNumber,entry.roadChainage,entry.lrpType,entry.desc,entry.latitude,entry.longitude) for entry in road)
 
-    print('Completed parsing road data.')
+    print('Completed parsing road data.\n')
 
-def convertBridgeInfo():
+def parseBridgeInfo():
     print('Entering bridge data parsing.')
 
     bridgeeRoot = '.htm'
@@ -112,7 +123,6 @@ def convertBridgeInfo():
         os.makedirs(bridgeDirectory+'CSV/')
 
     allBridges = []
-    currentRoadPrefix = ''
     for dirName in os.listdir(bridgeDirectory):
         superDir = bridgeDirectory+dirName+'/'
         if os.path.isdir(superDir):
@@ -124,9 +134,6 @@ def convertBridgeInfo():
                     roadId = filename.split('.')[0]
                     bridgeId = filename.split('.')[1]
 
-                    if roadId[0] != currentRoadPrefix:
-                        currentRoadPrefix = roadId[0]
-                        print('Parsing roads with prefix {}'.format(currentRoadPrefix))
                     print ('Active: {}.{}'.format(roadId,bridgeId), end="\r")
 
                     if 'bcs1' in filename:
@@ -272,7 +279,7 @@ def convertBridgeInfo():
                 index = 1
                 for key in bridgesForRoad:
                     entry = bridgesForRoad[key]
-                    if entry.isBridgeEmpty():
+                    if entry.isEmpty():
                         continue
                     allBridges.append(entry)
                     writer.writerow((index,entry.structureName,entry.bridgeCategory,entry.width,entry.length,entry.constructionYear,
