@@ -90,11 +90,10 @@ def parseRoadInfo():
                     continue
 
             #Road is constructed, save to file
-            isEmptyRoad = True
             for entry in newRoad:
-                if not entry.isEmpty():
-                    isEmptyRoad = False
-            if isEmptyRoad:
+                if entry.isEmpty():
+                    newRoad.remove(entry)
+            if len(newRoad) == 0:
                 print('Skipping empty road {}'.format(roadId))
                 continue
 
