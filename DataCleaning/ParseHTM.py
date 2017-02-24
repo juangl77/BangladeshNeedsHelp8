@@ -2,45 +2,55 @@ import csv
 import os
 import re
 from bs4 import BeautifulSoup
-from itertools import chain
 
-class RoadEntry():
-    roadId = ''
-    lrpNumber = ''
-    roadChainage = -1
-    lrpType = ''
-    desc = ''
-    latitude = -1
-    longitude = -1
+import ReadWriteCSV
+import Constants
 
-    def isEmpty(self):
-        return (self.latitude == -1 and self.longitude == -1 and self.roadChainage == -1 and self.lrpNumber == '')
+class Row():
+     def __init__(self,row):
+      self.data = row
 
-class Bridge():
-    bridgeId = ''
-    roadId = ''
-    structureName = ''
-    structureType = ''
-    bridgeCategory = ''
-    width = -1
-    length = -1
-    constructionYear = -1
-    spanNumber = -1
-    zone = ''
-    circle = ''
-    division = ''
-    subDivision = ''
-    structureLrpName = ''
-    referenceLrp = ''
-    locationLrpOffset = -1
-    locationChainage = -1
-    latitude = -1
-    longitude = -1
-    bcsTotalScore = -1
+def newRoadEntry():
+    return {
+        Constants.road:'',
+        Constants.lrp: '',
+        Constants.chainage: -1,
+        Constants.lrpType: '',
+        Constants.name:'',
+        Constants.lat: -1,
+        Constants.lon: -1
+    }
 
-    def isEmpty(self):
-        return (self.latitude == -1 and self.longitude == -1 and self.locationChainage == -1 and self.locationLrpOffset == -1 and self.spanNumber == -1
-                and self.constructionYear == -1 and self.width == -1 and self.length == -1 and self.bridgeId == '' and self.roadId == '')
+def roadEntryIsEmpty(entry):
+    return entry[Constants.lat] == -1 and entry[Constants.lon] == -1 and entry[Constants.chainage] == -1 and entry[Constants.lrp] == ''
+
+def newBridge():
+    return {
+        # Constants.bridge: '',
+        Constants.road: '',
+        Constants.structureNr: '',
+        Constants.name: '',
+        Constants.lrpType: '',
+        Constants.condition: '',
+        Constants.width: -1,
+        Constants.length: -1,
+        Constants.constructionYear: -1,
+        Constants.spans: -1,
+        Constants.zone: '',
+        Constants.circle: '',
+        Constants.division: '',
+        Constants.subDivision: '',
+        Constants.lrpname: '',
+        Constants.roadName: '',
+        Constants.chainage: -1,
+        Constants.lat: -1,
+        Constants.lon: -1
+    }
+
+def bridgeIsEmpty(entry):
+    return entry[Constants.lat] == -1 and entry[Constants.lon] == -1 and entry[Constants.chainage] == -1 and \
+        entry[Constants.spans] == -1 and entry[Constants.constructionYear] == -1 and entry[Constants.width] == -1 and \
+        entry[Constants.length] == -1 and entry[Constants.road] == ''
 
 def parseRoadInfo():
     print('Entering road data parsing.')
@@ -66,22 +76,22 @@ def parseRoadInfo():
                 if (row.name == 'tr'):
                     cells = row.contents
 
-                    newEntry = RoadEntry()
-                    newEntry.roadId = roadId
-                    newEntry.lrpNumber = cells[3].text.strip()
+                    newEntry = newRoadEntry()
+                    newEntry[Constants.road] = roadId
+                    newEntry[Constants.lrp] = cells[3].text.strip()
                     try:
-                        newEntry.roadChainage = float(cells[5].text.strip())
+                        newEntry[Constants.chainage] = float(cells[5].text.strip())
                     except ValueError:
                         print('Couldn\'t convert chainage to float for road {} (value is \'{}\').'.format(roadId, cells[5].text.strip()))
 
-                    newEntry.lrpType = cells[7].text.strip()
-                    newEntry.desc = cells[9].text.strip()
+                    newEntry[Constants.lrpType] = cells[7].text.strip()
+                    newEntry[Constants.name] = cells[9].text.strip()
                     try:
-                        newEntry.latitude = float(cells[11].text.strip())
+                        newEntry[Constants.lat] = float(cells[11].text.strip())
                     except ValueError:
                         print('Couldn\'t convert latitude to float for road {} (value is \'{}\').'.format(roadId,cells[11].text.strip()))
                     try:
-                        newEntry.longitude = float(cells[13].text.strip())
+                        newEntry[Constants.lon] = float(cells[13].text.strip())
                     except ValueError:
                         print('Couldn\'t convert longitude to float for road {} (value is \'{}\').'.format(roadId,cells[13].text.strip()))
 
@@ -91,24 +101,17 @@ def parseRoadInfo():
 
             #Road is constructed, save to file
             for entry in newRoad:
-                if entry.isEmpty():
+                if roadEntryIsEmpty(entry):
                     newRoad.remove(entry)
             if len(newRoad) == 0:
                 print('Skipping empty road {}'.format(roadId))
                 continue
 
-            allRoads.append(newRoad)
-            csvFile = filename.replace(' ', '')[:-4].upper()
-            with open(roadDirectory+'CSV/'+csvFile+'.csv', 'w') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerow(('Road Id','LRP Number', 'Road Chainage','Type','Desc','Latitude','Longitude'))
-                writer.writerows((entry.roadId,entry.lrpNumber,entry.roadChainage,entry.lrpType,entry.desc,entry.latitude,entry.longitude) for entry in newRoad)
+            allRoads.extend(newRoad)
+            csvFile = filename.replace(' ', '')[:-4].upper() + '.csv'
+            ReadWriteCSV.writeRoads([Row(row) for row in newRoad],roadDirectory+'CSV/'+csvFile+'.csv')
 
-    with open(roadDirectory + 'CSV/_allRoads.csv', 'w') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(('Road Id','LRP Number','Road Chainage','Type','Desc','Latitude','Longitude'))
-        for road in allRoads:
-            writer.writerows((entry.roadId,entry.lrpNumber,entry.roadChainage,entry.lrpType,entry.desc,entry.latitude,entry.longitude) for entry in road)
+    ReadWriteCSV.writeRoads([Row(row) for row in allRoads],roadDirectory + 'CSV/_allRoads.csv')
 
     print('Completed parsing road data.\n')
 
@@ -132,28 +135,30 @@ def parseBridgeInfo():
 
                     roadId = filename.split('.')[0]
                     bridgeId = filename.split('.')[1]
+                    structureNr = filename.split('.')[2]
 
                     print ('Active: {}.{}'.format(roadId,bridgeId), end="\r")
 
                     if 'bcs1' in filename:
-                        #this is a new bridge
                         tables = parsed.find_all('table')
 
                         if parsed.find(text=re.compile('error')):
                             continue
 
                         if bridgeId not in bridgesForRoad:
-                            bridgesForRoad[bridgeId] = Bridge()
+                            bridgesForRoad[bridgeId] = newBridge()
 
-                        bridgesForRoad[bridgeId].bridgeId = bridgeId
+                        # bridgesForRoad[bridgeId][Constants.bridge] = bridgeId
+                        bridgesForRoad[bridgeId][Constants.structureNr] = structureNr
 
                         data = tables[2].find_all('td')
-                        bridgesForRoad[bridgeId].zone = data[1].text.strip()
-                        bridgesForRoad[bridgeId].circle = data[3].text.strip()
-                        bridgesForRoad[bridgeId].division = data[5].text.strip()
-                        bridgesForRoad[bridgeId].subDivision = data[7].text.strip()
-                        bridgesForRoad[bridgeId].roadId = data[9].text.strip()
-                        bridgesForRoad[bridgeId].structureLrpName = data[13].text.strip()
+                        bridgesForRoad[bridgeId][Constants.zone] = data[1].text.strip()
+                        bridgesForRoad[bridgeId][Constants.circle] = data[3].text.strip()
+                        bridgesForRoad[bridgeId][Constants.division] = data[5].text.strip()
+                        bridgesForRoad[bridgeId][Constants.subDivision] = data[7].text.strip()
+                        bridgesForRoad[bridgeId][Constants.road] = data[9].text.strip()
+                        bridgesForRoad[bridgeId][Constants.roadName] = data[11].text.strip()
+                        bridgesForRoad[bridgeId][Constants.lrpname] = data[13].text.strip()
 
                         data = tables[3].find_all('td')
 
@@ -164,38 +169,37 @@ def parseBridgeInfo():
                             lonDeg = float(data[9].text.strip()) if data[9].text.strip() != '' else 0
                             lonMin = float(data[10].text.strip()) if data[10].text.strip() != '' else 0
                             lonSec = float(data[11].text.strip()) if data[11].text.strip() != '' else 0
-                            bridgesForRoad[bridgeId].latitude = latDeg + latMin/60. + latSec/3600.
-                            bridgesForRoad[bridgeId].longitude = lonDeg + lonMin/60. + lonSec/3600.
+                            bridgesForRoad[bridgeId][Constants.lat] = latDeg + latMin/60. + latSec/3600.
+                            bridgesForRoad[bridgeId][Constants.lon] = lonDeg + lonMin/60. + lonSec/3600.
                         except ValueError:
                             print('Problem with latitude/longitude for bridge {} on road {}'.format(bridgeId,roadId))
-                            bridgesForRoad[bridgeId].latitude = -1
-                            bridgesForRoad[bridgeId].longitude = -1
+                            bridgesForRoad[bridgeId][Constants.lat] = -1
+                            bridgesForRoad[bridgeId][Constants.lon] = -1
 
                         data = tables[4].find_all('td')
 
-                        bridgesForRoad[bridgeId].structureName = data[1].text.strip()
-                        bridgesForRoad[bridgeId].referenceLrp = data[3].text.strip()
+                        bridgesForRoad[bridgeId][Constants.name] = data[1].text.strip()
+                        #bridgesForRoad[bridgeId]['StructureLRPName'] = data[3].text.strip()
+                        # try:
+                        #     bridgesForRoad[bridgeId]['LocationLRPOffset'] = float(data[5].text.strip().replace(',','')) if data[5].text.strip() != '' else -1
+                        # except ValueError:
+                        #     print('Problem with location offset for bridge {} on road {}'.format(bridgeId,roadId))
                         try:
-                            bridgesForRoad[bridgeId].locationLrpOffset = float(data[5].text.strip().replace(',','')) if data[5].text.strip() != '' else -1
-                        except ValueError:
-                            print('Problem with location offset for bridge {} on road {}'.format(bridgeId,roadId))
-                        try:
-                            bridgesForRoad[bridgeId].locationChainage = float(data[7].text.strip().replace(',','')) if data[7].text.strip() != '' else -1
+                            bridgesForRoad[bridgeId][Constants.chainage] = float(data[7].text.strip().replace(',','')) if data[7].text.strip() != '' else -1
                         except ValueError:
                             print('Problem with location offset for bridge {} on road {}'.format(bridgeId,roadId))
 
                         data = tables[5].find_all('td')
 
-                        bridgesForRoad[bridgeId].structureType = data[0].text.strip()
+                        bridgesForRoad[bridgeId][Constants.lrpType] = data[0].text.strip()
 
                         data = tables[7].find_all('td')
 
-                        bridgesForRoad[bridgeId].constructionYear = data[3].text.strip()
+                        bridgesForRoad[bridgeId][Constants.constructionYear] = data[3].text.strip()
                         try:
-                            bridgesForRoad[bridgeId].spanNumber = float(data[9].text.strip().replace(',','')) if data[9].text.strip() != '' else -1
-                            bridgesForRoad[bridgeId].length = float(data[13].text.strip().replace(',','')) if data[13].text.strip() != '' else -1
-                            bridgesForRoad[bridgeId].width = float(data[15].text.strip().replace(',','')) if data[15].text.strip() != '' else -1
-                            bridgesForRoad[bridgeId].carriageway = float(data[17].text.strip().replace(',','')) if data[17].text.strip() != '' else -1
+                            bridgesForRoad[bridgeId][Constants.spans] = float(data[9].text.strip().replace(',','')) if data[9].text.strip() != '' else -1
+                            bridgesForRoad[bridgeId][Constants.length] = float(data[13].text.strip().replace(',','')) if data[13].text.strip() != '' else -1
+                            bridgesForRoad[bridgeId][Constants.width] = float(data[15].text.strip().replace(',','')) if data[15].text.strip() != '' else -1
                         except ValueError:
                             print('Problem with construction data for bridge {} on road {}'.format(bridgeId,roadId))
 
@@ -204,7 +208,7 @@ def parseBridgeInfo():
                         if parsed.find(text=re.compile('error')):
                             continue
                         if bridgeId not in bridgesForRoad:
-                            bridgesForRoad[bridgeId] = Bridge()
+                            bridgesForRoad[bridgeId] = newBridge()
 
                         tables = parsed.find_all('table')
                         data = tables[2].find_all('td')
@@ -214,16 +218,16 @@ def parseBridgeInfo():
                         division = data[6].text.strip()
                         subDivision = data[7].text.strip()
 
-                        bridgesForRoad[bridgeId].roadId = roadId if bridgesForRoad[bridgeId].roadId == '' else bridgesForRoad[bridgeId].roadId
-                        bridgesForRoad[bridgeId].bridgeId = bridgeId if bridgesForRoad[bridgeId].bridgeId == '' else bridgesForRoad[bridgeId].bridgeId
+                        bridgesForRoad[bridgeId][Constants.road] = roadId if bridgesForRoad[bridgeId][Constants.road] == '' else bridgesForRoad[bridgeId][Constants.road]
+                        # bridgesForRoad[bridgeId][Constants.bridge] = bridgeId if bridgesForRoad[bridgeId][Constants.bridge] == '' else bridgesForRoad[bridgeId][Constants.bridge]
 
-                        bridgesForRoad[bridgeId].zone = zone if bridgesForRoad[bridgeId].zone == '' else bridgesForRoad[bridgeId].zone
-                        bridgesForRoad[bridgeId].circle = circle if bridgesForRoad[bridgeId].circle == '' else bridgesForRoad[bridgeId].circle
-                        bridgesForRoad[bridgeId].division = division if bridgesForRoad[bridgeId].division == '' else bridgesForRoad[bridgeId].division
-                        bridgesForRoad[bridgeId].subDivision = subDivision if bridgesForRoad[bridgeId].subDivision == '' else bridgesForRoad[bridgeId].subDivision
+                        bridgesForRoad[bridgeId][Constants.zone] = zone if bridgesForRoad[bridgeId][Constants.zone] == '' else bridgesForRoad[bridgeId][Constants.zone]
+                        bridgesForRoad[bridgeId][Constants.circle] = circle if bridgesForRoad[bridgeId][Constants.circle] == '' else bridgesForRoad[bridgeId][Constants.circle]
+                        bridgesForRoad[bridgeId][Constants.division] = division if bridgesForRoad[bridgeId][Constants.division] == '' else bridgesForRoad[bridgeId][Constants.division]
+                        bridgesForRoad[bridgeId][Constants.subDivision] = subDivision if bridgesForRoad[bridgeId][Constants.subDivision] == '' else bridgesForRoad[bridgeId][Constants.subDivision]
 
                         category = parsed.find('td', text=re.compile('Category')).parent.find_all('table')[0]
-                        bridgesForRoad[bridgeId].bridgeCategory = category.find_all('td')[0].text.strip()
+                        bridgesForRoad[bridgeId][Constants.condition] = category.find_all('td')[0].text.strip()
 
                     elif 'bcs3' in filename:
                         #potentially interesting data, if they exist
@@ -231,7 +235,7 @@ def parseBridgeInfo():
                             continue
 
                         if bridgeId not in bridgesForRoad:
-                            bridgesForRoad[bridgeId] = Bridge()
+                            bridgesForRoad[bridgeId] = newBridge()
 
                         mainTable = parsed.find_all('table')[1].find_all('tr')
                         rowA = mainTable[1].find_all('td')
@@ -243,20 +247,24 @@ def parseBridgeInfo():
                         division = rowA[5].text.strip()
                         subDivision = rowA[7].text.strip()
                         roadId = rowB[1].text.strip()
+                        roadName = rowB[3].text.strip()
+                        structureId = rowC[1].text.strip()
                         structureName = rowC[5].text.strip()
 
                         #only replace information if it is not already specified in bcs1
-                        bridgesForRoad[bridgeId].zone = zone if bridgesForRoad[bridgeId].zone == '' else bridgesForRoad[bridgeId].zone
-                        bridgesForRoad[bridgeId].circle = circle if bridgesForRoad[bridgeId].circle == '' else bridgesForRoad[bridgeId].circle
-                        bridgesForRoad[bridgeId].division = division if bridgesForRoad[bridgeId].division == '' else bridgesForRoad[bridgeId].division
-                        bridgesForRoad[bridgeId].subDivision = subDivision if bridgesForRoad[bridgeId].subDivision == '' else bridgesForRoad[bridgeId].subDivision
-                        bridgesForRoad[bridgeId].roadId = roadId if bridgesForRoad[bridgeId].roadId == '' else bridgesForRoad[bridgeId].roadId
-                        bridgesForRoad[bridgeId].bridgeId = bridgeId if bridgesForRoad[bridgeId].bridgeId == '' else bridgesForRoad[bridgeId].bridgeId
-                        bridgesForRoad[bridgeId].structureName = structureName if bridgesForRoad[bridgeId].structureName == '' else bridgesForRoad[bridgeId].structureName
+                        bridgesForRoad[bridgeId][Constants.zone] = zone if bridgesForRoad[bridgeId][Constants.zone] == '' else bridgesForRoad[bridgeId][Constants.zone]
+                        bridgesForRoad[bridgeId][Constants.circle] = circle if bridgesForRoad[bridgeId][Constants.circle] == '' else bridgesForRoad[bridgeId][Constants.circle]
+                        bridgesForRoad[bridgeId][Constants.division] = division if bridgesForRoad[bridgeId][Constants.division] == '' else bridgesForRoad[bridgeId][Constants.division]
+                        bridgesForRoad[bridgeId][Constants.subDivision] = subDivision if bridgesForRoad[bridgeId][Constants.subDivision] == '' else bridgesForRoad[bridgeId][Constants.subDivision]
+                        bridgesForRoad[bridgeId][Constants.road] = roadId if bridgesForRoad[bridgeId][Constants.road] == '' else bridgesForRoad[bridgeId][Constants.road]
+                        bridgesForRoad[bridgeId][Constants.roadName] = roadName if bridgesForRoad[bridgeId][Constants.roadName] == '' else bridgesForRoad[bridgeId][Constants.roadName]
+                        # bridgesForRoad[bridgeId][Constants.bridge] = bridgeId if bridgesForRoad[bridgeId][Constants.bridge] == '' else bridgesForRoad[bridgeId][Constants.bridge]
+                        bridgesForRoad[bridgeId][Constants.structureNr] = structureId if bridgesForRoad[bridgeId][Constants.structureNr] == '' else bridgesForRoad[bridgeId][Constants.structureNr]
+                        bridgesForRoad[bridgeId][Constants.name] = structureName if bridgesForRoad[bridgeId][Constants.name] == '' else bridgesForRoad[bridgeId][Constants.name]
 
                         try:
                             chainage = float(rowB[5].text.strip().replace(',','')) if rowB[5].text.strip() != '' else -1
-                            bridgesForRoad[bridgeId].locationChainage = chainage if bridgesForRoad[bridgeId].locationChainage == -1 else bridgesForRoad[bridgeId].locationChainage
+                            bridgesForRoad[bridgeId][Constants.chainage] = chainage if bridgesForRoad[bridgeId][Constants.chainage] == -1 else bridgesForRoad[bridgeId][Constants.chainage]
                         except ValueError:
                             print('Problem with location chainage for bridge {} on road {}'.format(bridgeId,roadId))
 
@@ -269,33 +277,15 @@ def parseBridgeInfo():
                 #no bridges created, don't create CSV
                 continue
 
-            csvFile = dirName
-            with open(bridgeDirectory+'CSV/'+csvFile+'.csv', 'w') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerow(('Number','Structure Name','Condition of Bridge', 'TotalWidth','TotalLength','ConstructionYear',
-                    'NumberOfSpan','Zone','Circle','Division','Sub-Division','RoadNo','BridgeNo','StructureLRPName','ReferenceLRPNo','LocationLRPOffset',
-                    'LocationChainage','Latitude','Longitude'))
-                index = 1
-                for key in bridgesForRoad:
-                    entry = bridgesForRoad[key]
-                    if entry.isEmpty():
-                        continue
-                    allBridges.append(entry)
-                    writer.writerow((index,entry.structureName,entry.bridgeCategory,entry.width,entry.length,entry.constructionYear,
-                        entry.spanNumber,entry.zone,entry.circle,entry.division,entry.subDivision,entry.roadId,entry.bridgeId,entry.structureLrpName,entry.referenceLrp,entry.locationLrpOffset,
-                        entry.locationChainage,entry.latitude,entry.longitude))
-                    index += 1
+            csvFile = dirName + '.csv'
+            bridges = []
+            for entry in list(bridgesForRoad.values()):
+                if bridgeIsEmpty(entry):
+                    continue
+                allBridges.append(Row(entry))
+                bridges.append(Row(entry))
+            ReadWriteCSV.writeBridges(bridges,bridgeDirectory+'CSV/'+csvFile+'.csv')
 
-    with open(bridgeDirectory+'CSV/_allBridges.csv', 'w') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(('Number','Structure Name','Condition of Bridge', 'TotalWidth','TotalLength','ConstructionYear',
-            'NumberOfSpan','Zone','Circle','Division','Sub-Division','RoadNo','BridgeNo','StructureLRPName','ReferenceLRPNo','LocationLRPOffset',
-            'LocationChainage','Latitude','Longitude'))
-        index = 1
-        for entry in allBridges:
-            writer.writerow((index,entry.structureName,entry.bridgeCategory,entry.width,entry.length,entry.constructionYear,
-                entry.spanNumber,entry.zone,entry.circle,entry.division,entry.subDivision,entry.roadId,entry.bridgeId,entry.structureLrpName,entry.referenceLrp,entry.locationLrpOffset,
-                entry.locationChainage,entry.latitude,entry.longitude))
-            index += 1
+    ReadWriteCSV.writeBridges(allBridges,bridgeDirectory + 'CSV/_allBridges.csv')
 
     print('Completed parsing bridge data.')
