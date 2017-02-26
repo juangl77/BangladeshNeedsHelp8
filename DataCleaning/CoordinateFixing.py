@@ -42,25 +42,29 @@ class Boundary():
 def buildRows(rows):
 	return [Row(row) for row in rows]
 
-def fixBridges():
- rows = buildRows(ReadWriteCSV.readBridges())
+def fixBridges(bridgeFile):
+ rows = buildRows(ReadWriteCSV.readBridges(bridgeFile))
 
  new_rows = map(lambda r: r.fix(), rows)
  ReadWriteCSV.writeBridges(new_rows,'../BMMS/CSV/_allBridges_fixed.csv')
+ return '../BMMS/CSV/_allBridges_fixed.csv'
 
-def fixRoads():
- rows = buildRows(ReadWriteCSV.readRoads())
+def fixRoads(roadFile):
+ rows = buildRows(ReadWriteCSV.readRoads(roadFile))
  new_rows = map(lambda r: r.fix(), rows)
  ReadWriteCSV.writeRoads(new_rows,'../RMMS/CSV/_allRoads_fixed.csv')
+ return '../RMMS/CSV/_allRoads_fixed.csv'
 
-def boundCheckBridges():
+def boundCheckBridges(bridgeFile):
  bound = Boundary('../WBSIM/gis/gadm/BGD_adm0.shp')
- rows = buildRows(ReadWriteCSV.readBridges())
+ rows = buildRows(ReadWriteCSV.readBridges(bridgeFile))
  new_rows = filter(lambda r: bound.inside(r.coor), rows)
  ReadWriteCSV.writeBridges(new_rows,'../BMMS/CSV/_allBridges_final.csv')
+ return '../BMMS/CSV/_allBridges_final.csv'
 
-def boundCheckRoads():
+def boundCheckRoads(roadFile):
  bound = Boundary('../WBSIM/gis/gadm/BGD_adm0.shp')
- rows = buildRows(ReadWriteCSV.readRoads())
+ rows = buildRows(ReadWriteCSV.readRoads(roadFile))
  new_rows = filter(lambda r: bound.inside(r.coor), rows)
  ReadWriteCSV.writeRoads(new_rows,'../RMMS/CSV/_allRoads_final.csv')
+ return '../RMMS/CSV/_allRoads_final.csv'
