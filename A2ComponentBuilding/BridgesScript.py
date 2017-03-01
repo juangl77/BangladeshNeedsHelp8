@@ -25,4 +25,4 @@ links = [
 vertices = [
 ]
 
-writer.write(objects, links, [])
+writer.write(objects, links, vertices)
