@@ -42,6 +42,7 @@ class BridgeObject(SimioObject):
 		self.category = category
 		self.length = length
 		self.initialTravelerCapacity = "SmallBridgeCapacity" if length < 50 else "LargeBridgeCapacity"
+		self.enteringAddOnProcess = ""
 		self.reportStatistics = "True"
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):
@@ -49,4 +50,5 @@ class BridgeObject(SimioObject):
 		worksheet.write_string(columnMapping["Category"].format(index), self.category)
 		worksheet.write_number(columnMapping["Length"].format(index), self.length)
 		worksheet.write_string(columnMapping["InitialTravelerCapacity"].format(index), self.initialTravelerCapacity)
+		worksheet.write_string(columnMapping["EnteringAddOnProcess"].format(index), self.enteringAddOnProcess)
 		worksheet.write_string(columnMapping["ReportStatistics"].format(index), self.reportStatistics)
