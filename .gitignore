@@ -3,3 +3,4 @@ RMMS/*
 WBSIM/*
 */__pycache__/*
 *.xlsx
+*.pyc

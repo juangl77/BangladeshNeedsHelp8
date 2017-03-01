@@ -1,5 +1,5 @@
-import xlsxwriter
 import os
+import xlsxwriter
 
 import ColumnMapping
 
@@ -25,8 +25,13 @@ class ExcelWriter():
 		workbook.close()
 
 	def writeObjects(self, workbook, objects):
+		header_format = workbook.add_format({
+		    'bg_color': '#FFFF00',
+		    'bold': True
+		})
+
 		worksheet = workbook.add_worksheet('Objects1')
-		worksheet.write_row('A1', ColumnMapping.objectColumnNames)
+		worksheet.write_row('A1', ColumnMapping.objectColumnNames,header_format)
 
 		index = 2
 		for obj in objects:
@@ -34,8 +39,13 @@ class ExcelWriter():
 			index += 1
 
 	def writeLinks(self, workbook, links):
+		header_format = workbook.add_format({
+		    'bg_color': '#92CDDC',
+		    'bold': True
+		})
+
 		worksheet = workbook.add_worksheet('Links1')
-		worksheet.write_row('A1', ColumnMapping.linkColumnNames)
+		worksheet.write_row('A1', ColumnMapping.linkColumnNames,header_format)
 
 		index = 2
 		for link in links:
@@ -43,8 +53,13 @@ class ExcelWriter():
 			index += 1
 
 	def writeVertices(self, workbook, vertices):
+		header_format = workbook.add_format({
+		    'bg_color': '#D8E4BC',
+		    'bold': True
+		})
+
 		worksheet = workbook.add_worksheet('Vertices1')
-		worksheet.write_row('A1', ColumnMapping.vertexColumnNames)
+		worksheet.write_row('A1', ColumnMapping.vertexColumnNames, header_format)
 
 		index = 2
 		for vertex in vertices:
