@@ -1,28 +1,15 @@
 from ExcelWriter import ExcelWriter
-
-from SimioObject import TruckObject, ChittagongObject, DhakaObject, BridgeObject
-from SimioLink import SimioLink
-from SimioVertex import SimioVertex
-
-from Location import Location
+from DataBuilder import DataBuilder
+from BridgeIndexer import BridgeIndexer
+from DataReader import DataReader
 import ColumnMapping
 
+reader = DataReader("n1_bridges.csv", "n1_road.csv")
+indexer = BridgeIndexer(reader.readBridges())
+
+builder = DataBuilder(reader.readRoads(), indexer)
+(objects, links, vertices) = builder.build()
+
 ColumnMapping.init()
-
-writer = ExcelWriter("bridges.xlsx")
-
-objects = [
-	TruckObject(Location(0,0,0), 48),
-	ChittagongObject(Location(10,0,10), 5),
-	DhakaObject(Location(20,0,20)),
-	BridgeObject("Bridge", Location(15,0,15), "B", 75)
-]
-
-links = [
-
-]
-
-vertices = [
-]
-
+writer = ExcelWriter("simio.xlsx")
 writer.write(objects, links, vertices)

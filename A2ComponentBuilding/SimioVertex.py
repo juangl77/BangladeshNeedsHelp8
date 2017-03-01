@@ -1,7 +1,7 @@
 class SimioVertex(object):
-	def __init__(self, vertexName, location):
+	def __init__(self, road, lrp, location):
 		self.vertexClass = "RoadLRP"
-		self.vertexName = vertexName
+		self.vertexName = road+"_"+lrp
 		self.location = location
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):
