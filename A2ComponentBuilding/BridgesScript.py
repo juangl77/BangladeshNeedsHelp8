@@ -1,5 +1,9 @@
 from ExcelWriter import ExcelWriter
+
 from SimioObject import TruckObject, ChittagongObject, DhakaObject, BridgeObject
+from SimioLink import SimioLink
+from SimioVertex import SimioVertex
+
 from Location import Location
 import ColumnMapping
 
@@ -14,4 +18,11 @@ objects = [
 	BridgeObject("Bridge", Location(15,0,15), "B", 75)
 ]
 
-writer.write(objects, [], [])
+links = [
+
+]
+
+vertices = [
+]
+
+writer.write(objects, links, [])
