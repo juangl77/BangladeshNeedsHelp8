@@ -1,8 +1,9 @@
 class SimioObject(object):
-	def __init__(self, objectClass, objectName, location):
+	def __init__(self, objectClass, objectName, location, lrp = ""):
 		self.objectClass = objectClass
 		self.objectName = objectName
 		self.location = location
+		self.lrp = lrp
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):
 		worksheet.write_string(columnMapping["Object Class"].format(index), self.objectClass)
@@ -22,8 +23,8 @@ class TruckObject(SimioObject):
 		worksheet.write_number(columnMapping["InitialDesiredSpeed"].format(index), self.initialDesiredSpeed)
 
 class ChittagongObject(SimioObject):
-	def __init__(self, location, interarrivalTime, entityType = "Truck"):
-		SimioObject.__init__(self, "Source", "Chittagong", location)
+	def __init__(self, location, lrp, interarrivalTime, entityType = "Truck"):
+		SimioObject.__init__(self, "Source", "Chittagong", location, lrp)
 		self.interarrivalTime = interarrivalTime
 		self.entityType = entityType
 
@@ -33,12 +34,12 @@ class ChittagongObject(SimioObject):
 		worksheet.write_string(columnMapping["EntityType"].format(index), self.entityType)
 
 class DhakaObject(SimioObject):
-	def __init__(self, location):
-		SimioObject.__init__(self, "Sink", "Dhaka", location)
+	def __init__(self, location, lrp):
+		SimioObject.__init__(self, "Sink", "Dhaka", location, lrp)
 
 class BridgeObject(SimioObject):
-	def __init__(self, name, location, category, length):
-		SimioObject.__init__(self, "Bridge", name, location)
+	def __init__(self, road, location, lrp, category, length):
+		SimioObject.__init__(self, "Bridge", road+"_"+lrp, location, lrp)
 		self.category = category
 		self.length = length
 		self.initialTravelerCapacity = "SmallBridgeCapacity" if length < 50 else "LargeBridgeCapacity"

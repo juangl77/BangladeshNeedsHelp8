@@ -1,9 +1,9 @@
 class SimioLink(object):
-	def __init__(self, linkName, fromNode, toNode):
+	def __init__(self, road, startLRP, endLRP):
 		self.linkClass = "Path"
-		self.linkName = linkName
-		self.fromNode = fromNode
-		self.toNode = toNode
+		self.linkName = road+"_"+startLRP+"_"+endLRP
+		self.fromNode = road+"_"+startLRP
+		self.toNode = road+"_"+endLRP
 		self.network = "RoadNetwork"
 		self.directionType = "Unidirectional"
 		self.drawnToScale = "True"
