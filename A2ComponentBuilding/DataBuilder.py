@@ -1,5 +1,5 @@
 from SimioObject import TruckObject, ChittagongObject, DhakaObject, BridgeObject, EndBridgeObject
-from SimioLink import SimioLink, StartSimioLink, EndSimioLink
+from SimioLink import SimioLink, StartSimioLink, EndSimioLink, SimioBridgeLink
 from SimioVertex import SimioVertex
 from Location import Location
 
@@ -69,6 +69,6 @@ class DataBuilder():
 
 		bridgeStart = BridgeObject(startNodeData.road, bridgeStartLocation, startNodeData.lrp, condition, length)
 		bridgeEnd = EndBridgeObject(endNodeData.road, bridgeEndLocation, endNodeData.lrp, condition, length)
-		bridgeLink = SimioLink(startNodeData.road, startNodeData.lrp, endNodeData.lrp)
+		bridgeLink = SimioBridgeLink(startNodeData.road, startNodeData.lrp, endNodeData.lrp)
 
 		return (bridgeStart, bridgeEnd, bridgeLink)

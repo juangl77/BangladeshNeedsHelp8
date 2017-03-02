@@ -21,6 +21,13 @@ class SimioLink(BaseSimioLink):
 		self.fromNode = road+"_"+startLRP
 		self.toNode = road+"_"+endLRP
 
+class SimioBridgeLink(BaseSimioLink):
+	def __init__(self, road, startLRP, endLRP):
+		BaseSimioLink.__init__(self)
+		self.linkName = "bridge_"+road+"_"+startLRP+"_"+endLRP
+		self.fromNode = road+"_"+startLRP
+		self.toNode = road+"_"+endLRP
+
 class StartSimioLink(BaseSimioLink):
 	def __init__(self, road, fromNode, lrp):
 		BaseSimioLink.__init__(self)
