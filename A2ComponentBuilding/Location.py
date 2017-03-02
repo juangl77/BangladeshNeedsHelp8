@@ -6,7 +6,7 @@ class Centre():
 		self.lon = lon
 
 class Location():
-	centre = Centre(90, 23)
+	centre = Centre(23, 90)
 
 	def __init__(self, lat, lon):
 		self.x = (lon - self.centre.lon) * 102 * 1000
