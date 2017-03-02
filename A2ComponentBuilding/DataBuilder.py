@@ -13,6 +13,29 @@ class DataBuilder():
 		self.endData = roadData[-1]
 		self.index = index
 
+	def mergeData(self):
+		#Add condition and length values to the road data
+		self.setBridgeData(self.startData)
+		self.setBridgeData(self.endData)
+
+		for road in self.roadData:
+			self.setBridgeData(road)
+
+		for road in self.roadData:
+			if (road.hasGap()):
+				print("{} (with gap {}): {} - {}".format(road.lrp,road.gap,road.condition,road.length))
+
+	def setBridgeData(self, road):
+		if road.hasGap() and (road.gap == "BS" or road.gap == "BE"):
+			try:
+				bridge = self.index.find(road.lrp)
+				print('BRIDGE DATA: {} - {} - {}'.format(bridge.lrp,bridge.condition,bridge.length))
+				road.condition = bridge.condition
+				road.length = bridge.length
+			except:
+				print('No bridge found for start')
+		return road
+
 	def build(self):
 		objects = [TruckObject(Location(23.7, 90.4), 48)]
 		links = []

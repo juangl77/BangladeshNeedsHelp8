@@ -9,9 +9,24 @@ class BridgeData():
 		self.condition = row['condition']
 		self.lat = row['lat']
 		self.lon = row['lon']
+		self.constructionYear = row['constructionYear']
 
 	def __lt__(self, other):
 		return self.lrp < other.lrp
+
+	def toDict(self):
+		return {
+			'road':self.road,
+			'lrp':self.lrp,
+			'length':self.length,
+			'condition':self.condition,
+			'lat':self.lat,
+			'lon':self.lon,
+			'constructionYear':self.constructionYear
+		}
+
+	def fromDict(row):
+		return BridgeData(row)
 
 class RoadData():
 	def __init__(self, row):

@@ -6,6 +6,7 @@ import ColumnMapping
 
 reader = DataReader("n1_bridges.csv", "n1_road.csv")
 indexer = BridgeIndexer(reader.readBridges())
+indexer.cleanDuplicates()
 
 builder = DataBuilder(reader.readRoads(), indexer)
 (objects, links, vertices) = builder.build()
