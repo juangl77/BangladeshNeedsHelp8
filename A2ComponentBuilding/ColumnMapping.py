@@ -8,7 +8,7 @@ def initObjects():
 	objectColumnNames = [
 		"Object Class", "Object Name", "X", "Y", "Z", "Length", "Width", "Height", 
 		"InitialDesiredSpeed", "EntityType", "InterarrivalTime", "InitialTravelerCapacity", 
-		"Category", "EnteringAddOnProcess", "RunInitializedAddOnProcess", "ReportStatistics"
+		"Category", "EnteredAddOnProcess", "RunInitializedAddOnProcess", "ReportStatistics"
 	]
 	
 	global objectColumnMapping
