@@ -15,8 +15,8 @@ class RoadData():
 		self.road = row['road']
 		self.lrp = row['lrp']
 		self.gap = row['gap']
-		self.lat = row['lat']
-		self.lon = row['lon']
+		self.lat = float(row['lat'])
+		self.lon = float(row['lon'])
 
 	def hasGap(self):
 		return self.gap != ''
