@@ -1,4 +1,4 @@
-from SimioObject import TruckObject, ChittagongObject, DhakaObject, BridgeObject
+from SimioObject import TruckObject, ChittagongObject, DhakaObject, BridgeObject, EndBridgeObject
 from SimioLink import SimioLink
 from SimioVertex import SimioVertex
 from Location import Location
@@ -17,38 +17,45 @@ class DataBuilder():
 		objects = [TruckObject(Location(0,0), 48)]
 		links = []
 		vertices = []
+		tempVertexData = []
 
-		objects.append(self.buildChittagong())
+		objects.append(self.buildDhaka(self.startData))
 
 		for dataPoint in self.roadData:
 			if dataPoint.hasGap():
 				if dataPoint.gap == "BS":
 					startNodeData = dataPoint
+					road = SimioLink(startNodeData.road, objects[-1].lrp, startNodeData.lrp)
+					links.append(road)
+
+					for vertexData in tempVertexData:
+						vertices.append(SimioVertex(road.linkName, Location(vertexData.lat, vertexData.lon)))
+
+					tempVertexData = []
 				else :
-					(bridgeStart, bridgeEnd, linkRoad, linkBridge) = self.buildBridge(objects[-1], startNodeData, dataPoint)
+					(bridgeStart, bridgeEnd, bridgeLink) = self.buildBridge(startNodeData, dataPoint)
 					objects.append(bridgeStart)
 					objects.append(bridgeEnd)
-					links.append(linkRoad)
-					links.append(linkBridge)
+					links.append(bridgeLink)
 			else:
-				vertices.append(SimioVertex(dataPoint.road, dataPoint.lrp, Location(dataPoint.lat, dataPoint.lon)))
+				tempVertexData.append(dataPoint)
 
-		objects.append(self.buildDhaka())
+		objects.append(self.buildChittagong(self.endData))
 
 		return (objects, links, vertices)
 
-	def buildChittagong(self):
-		location = Location(self.startData.lat,self.startData.lon)
-		lrp = self.startData.lrp
+	def buildChittagong(self, dataPoint):
+		location = Location(dataPoint.lat, dataPoint.lon)
+		lrp = dataPoint.lrp
+		return ChittagongObject(location, lrp)
+
+	def buildDhaka(self, dataPoint):
+		location = Location(dataPoint.lat, dataPoint.lon)
+		lrp = dataPoint.lrp
 		interarrivalTime = 5
-		return ChittagongObject(location, lrp, interarrivalTime)
+		return DhakaObject(location, lrp, interarrivalTime)
 
-	def buildDhaka(self):
-		location = Location(self.endData.lat, self.endData.lon)
-		lrp = self.endData.lrp
-		return DhakaObject(location, lrp)
-
-	def buildBridge(self, lastNode, startNodeData, endNodeData):
+	def buildBridge(self, startNodeData, endNodeData):
 		bridgeStartLocation = Location(startNodeData.lat, startNodeData.lon)
 		bridgeEndLocation = Location(endNodeData.lat, endNodeData.lon)
 		length = bridgeStartLocation.distanceTo(bridgeEndLocation)
@@ -60,8 +67,7 @@ class DataBuilder():
 			condition = self.index[endNodeData.lrp].condition
 
 		bridgeStart = BridgeObject(startNodeData.road, bridgeStartLocation, startNodeData.lrp, condition, length)
-		bridgeEnd = BridgeObject(endNodeData.road, bridgeEndLocation, endNodeData.lrp, condition, length)
-		linkRoad = SimioLink(startNodeData.road, lastNode.lrp, startNodeData.lrp)
-		linkBridge = SimioLink(startNodeData.road, startNodeData.lrp, endNodeData.lrp)
+		bridgeEnd = EndBridgeObject(endNodeData.road, bridgeEndLocation, endNodeData.lrp, condition, length)
+		bridgeLink = SimioLink(startNodeData.road, startNodeData.lrp, endNodeData.lrp)
 
-		return (bridgeStart, bridgeEnd, linkRoad, linkBridge)
+		return (bridgeStart, bridgeEnd, bridgeLink)
