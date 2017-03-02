@@ -10,6 +10,9 @@ class BridgeData():
 		self.lat = row['lat']
 		self.lon = row['lon']
 
+	def __lt__(self, other):
+		return self.lrp < other.lrp
+
 class RoadData():
 	def __init__(self, row):
 		self.road = row['road']
