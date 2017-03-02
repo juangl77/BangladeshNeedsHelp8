@@ -14,7 +14,7 @@ class DataBuilder():
 		self.index = index
 
 	def build(self):
-		objects = [TruckObject(Location(0,0), 48)]
+		objects = [TruckObject(Location(23.7, 90.4), 48)]
 		links = []
 		vertices = []
 		tempVertexData = []
