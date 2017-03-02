@@ -1,6 +1,11 @@
+from bisect import bisect_right
+
 class BridgeIndexer():
 	def __init__(self, bridgeData):
-		self.index = {}
+		self.bridgeData = bridgeData
 
-		for dataPoint in bridgeData:
-			self.index[dataPoint.lrp] = dataPoint
+	def find(self, lrp):
+		i = bisect_right(self.bridgeData, lrp)
+		if i:
+			return self.bridgeData[i-1]
+		raise ValueError

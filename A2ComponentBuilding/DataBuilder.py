@@ -7,11 +7,11 @@ from BridgeIndexer import BridgeIndexer
 from DataReader import RoadData, BridgeData
 
 class DataBuilder():
-	def __init__(self, roadData, indexer):
+	def __init__(self, roadData, index):
 		self.startData = roadData[0]
 		self.roadData = roadData[1:-1]
 		self.endData = roadData[-1]
-		self.index = indexer.index
+		self.index = index
 
 	def build(self):
 		objects = [TruckObject(Location(0,0), 48)]
@@ -59,12 +59,7 @@ class DataBuilder():
 		bridgeStartLocation = Location(startNodeData.lat, startNodeData.lon)
 		bridgeEndLocation = Location(endNodeData.lat, endNodeData.lon)
 		length = bridgeStartLocation.distanceTo(bridgeEndLocation)
-		condition = "NA"
-
-		if startNodeData.lrp in self.index:
-			condition = self.index[startNodeData.lrp].condition
-		elif endNodeData.lrp in self.index:
-			condition = self.index[endNodeData.lrp].condition
+		condition = self.index.find(startNodeData.lrp).condition
 
 		bridgeStart = BridgeObject(startNodeData.road, bridgeStartLocation, startNodeData.lrp, condition, length)
 		bridgeEnd = EndBridgeObject(endNodeData.road, bridgeEndLocation, endNodeData.lrp, condition, length)
