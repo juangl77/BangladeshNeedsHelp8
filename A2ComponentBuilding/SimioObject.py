@@ -43,7 +43,7 @@ class BridgeObject(SimioObject):
 		self.category = category
 		self.length = length
 		self.initialTravelerCapacity = "SmallBridgeCapacity" if length < 50 else "LargeBridgeCapacity"
-		self.runInitializedAddOnProcess = self.chooseInitializedAddOnProcess(length)
+		self.runInitializedAddOnProcess = "SetBridgeState_"+category
 		self.reportStatistics = "True"
 
 	def chooseInitializedAddOnProcess(self, length):
@@ -67,8 +67,8 @@ class BridgeObject(SimioObject):
 class EndBridgeObject(BridgeObject):
 	def __init__(self, road, location, lrp, category, length):
 		BridgeObject.__init__(self, road, location, lrp, category, length)
-		self.enteringAddOnProcess = "SetBridgeState_"+category
+		self.enteringAddOnProcess = self.chooseInitializedAddOnProcess(length)
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):
 		super(EndBridgeObject, self).writeToWorksheet(worksheet, columnMapping, index)
-		worksheet.write_string(columnMapping["EnteringAddOnProcess"].format(index), self.enteringAddOnProcess)
+		worksheet.write_string(columnMapping["EnteredAddOnProcess"].format(index), self.enteringAddOnProcess)
