@@ -10,7 +10,7 @@ class Location():
 		dx = (location.x - self.x) * 102
 		dy = (location.y - self.y)
 		dz = (location.z - self.z) * 111
-		return sqrt(pow(dx,2) + pow(dy,2) + pow(dz,2))
+		return int(sqrt(pow(dx,2) + pow(dy,2) + pow(dz,2)) * 1000)
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):
 		worksheet.write_number(columnMapping["X"].format(index), self.x)
