@@ -1,9 +1,6 @@
-class SimioLink(object):
-	def __init__(self, road, startLRP, endLRP):
+class BaseSimioLink(object):
+	def __init__(self):
 		self.linkClass = "Path"
-		self.linkName = road+"_"+startLRP+"_"+endLRP
-		self.fromNode = road+"_"+startLRP
-		self.toNode = road+"_"+endLRP
 		self.network = "RoadNetwork"
 		self.directionType = "Unidirectional"
 		self.drawnToScale = "True"
@@ -16,3 +13,24 @@ class SimioLink(object):
 		worksheet.write_string(columnMapping["Network"].format(index), self.network)
 		worksheet.write_string(columnMapping["Type"].format(index), self.directionType)
 		worksheet.write_string(columnMapping["DrawnToScale"].format(index), self.drawnToScale)
+
+class SimioLink(BaseSimioLink):
+	def __init__(self, road, startLRP, endLRP):
+		BaseSimioLink.__init__(self)
+		self.linkName = road+"_"+startLRP+"_"+endLRP
+		self.fromNode = road+"_"+startLRP
+		self.toNode = road+"_"+endLRP
+
+class StartSimioLink(BaseSimioLink):
+	def __init__(self, road, fromNode, lrp):
+		BaseSimioLink.__init__(self)
+		self.linkName = road+"_"+fromNode+"_"+lrp
+		self.fromNode = fromNode
+		self.toNode = road+"_"+lrp 
+
+class EndSimioLink(BaseSimioLink):
+	def __init__(self, road, lrp, toNode):
+		BaseSimioLink.__init__(self)
+		self.linkName = road+"_"+lrp+"_"+toNode
+		self.fromNode = road+"_"+lrp 
+		self.toNode = toNode 
