@@ -1,16 +1,23 @@
 from math import sqrt, pow
 
-class Location():
+class Centre():
 	def __init__(self, lat, lon):
-		self.x = lon
+		self.lat = lat
+		self.lon = lon
+
+class Location():
+	centre = Centre(90, 23)
+
+	def __init__(self, lat, lon):
+		self.x = (lon - self.centre.lon) * 102 * 1000
 		self.y = 0
-		self.z = -lat
+		self.z = -(lat - self.centre.lat) * 111 * 1000
 
 	def distanceTo(self, location):
-		dx = (location.x - self.x) * 102
+		dx = (location.x - self.x)
 		dy = (location.y - self.y)
-		dz = (location.z - self.z) * 111
-		return int(sqrt(pow(dx,2) + pow(dy,2) + pow(dz,2)) * 1000)
+		dz = (location.z - self.z)
+		return sqrt(pow(dx,2) + pow(dy,2) + pow(dz,2))
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):
 		worksheet.write_number(columnMapping["X"].format(index), self.x)
