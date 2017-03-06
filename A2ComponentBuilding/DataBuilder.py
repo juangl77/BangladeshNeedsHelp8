@@ -7,34 +7,15 @@ from BridgeIndexer import BridgeIndexer
 from DataReader import RoadData, BridgeData
 
 class DataBuilder():
+
 	def __init__(self, roadData, index):
 		self.startData = roadData[0]
 		self.roadData = roadData[1:-1]
 		self.endData = roadData[-1]
 		self.index = index
 
-	def mergeData(self):
-		#Add condition and length values to the road data
-		self.setBridgeData(self.startData)
-		self.setBridgeData(self.endData)
-
-		for road in self.roadData:
-			self.setBridgeData(road)
-
-		for road in self.roadData:
-			if (road.hasGap()):
-				print("{} (with gap {}): {} - {}".format(road.lrp,road.gap,road.condition,road.length))
-
-	def setBridgeData(self, road):
-		if road.hasGap() and (road.gap == "BS" or road.gap == "BE"):
-			try:
-				bridge = self.index.find(road.lrp)
-				print('BRIDGE DATA: {} - {} - {}'.format(bridge.lrp,bridge.condition,bridge.length))
-				road.condition = bridge.condition
-				road.length = bridge.length
-			except:
-				print('No bridge found for start')
-		return road
+		self.categoryECount = 0
+		self.bridgeCount = 0
 
 	def build(self):
 		objects = [TruckObject(Location(23.7, 90.4), 48)]
@@ -63,6 +44,7 @@ class DataBuilder():
 					objects.append(bridgeStart)
 					objects.append(bridgeEnd)
 					links.append(bridgeLink)
+					self.bridgeCount += 1
 			else:
 				tempVertexData.append(dataPoint)
 
@@ -70,6 +52,8 @@ class DataBuilder():
 		lastLink = EndSimioLink(self.endData.road, objects[-1].lrp, "Input@Chittagong")
 		objects.append(sink)
 		links.append(lastLink)
+
+		print('Added {} bridges with {} category E.'.format(self.bridgeCount,self.categoryECount))
 
 		return (objects, links, vertices)
 
@@ -88,7 +72,13 @@ class DataBuilder():
 		bridgeStartLocation = Location(startNodeData.lat, startNodeData.lon)
 		bridgeEndLocation = Location(endNodeData.lat, endNodeData.lon)
 		length = bridgeStartLocation.distanceTo(bridgeEndLocation)
-		condition = self.index.find(startNodeData.lrp).condition
+		bridge = self.index.find(startNodeData.lrp)
+
+		if bridge is not None:
+			condition = bridge.condition
+		else:
+			self.categoryECount += 1
+			condition = "E"
 
 		bridgeStart = BridgeObject(startNodeData.road, bridgeStartLocation, startNodeData.lrp, condition, length)
 		bridgeEnd = EndBridgeObject(endNodeData.road, bridgeEndLocation, endNodeData.lrp, condition, length)

@@ -4,15 +4,19 @@ import csv
 class BridgeData():
 	def __init__(self, row):
 		self.road = row['road']
-		self.lrp = row['LRPName']
+		self.lrp = row['LRPName'].strip().upper()
 		self.length = row['length']
 		self.condition = row['condition']
 		self.lat = row['lat']
 		self.lon = row['lon']
 		self.constructionYear = row['constructionYear']
+		self.matched = False
 
 	def __lt__(self, other):
 		return self.lrp < other.lrp
+
+	def bridgeComplete(self):
+		return self.constructionYear != ''
 
 	def toDict(self):
 		return {
@@ -31,7 +35,7 @@ class BridgeData():
 class RoadData():
 	def __init__(self, row):
 		self.road = row['road']
-		self.lrp = row['lrp']
+		self.lrp = row['lrp'].strip().upper()
 		self.gap = row['gap']
 		self.lat = float(row['lat'])
 		self.lon = float(row['lon'])
