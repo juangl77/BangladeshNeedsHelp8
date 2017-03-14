@@ -1,4 +1,3 @@
-import ParseHTM
+import DataHandling
 
-ParseHTM.parseWidthInfo()
-ParseHTM.parseWidthInfo()
+DataHandling.parseWidthInfo()
