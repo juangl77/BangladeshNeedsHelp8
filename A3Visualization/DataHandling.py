@@ -1,4 +1,5 @@
 import os
+import re
 from bs4 import BeautifulSoup
 import pandas
 
@@ -20,7 +21,6 @@ def readCSV(roadId,filename):
         return df[df['road']==roadId]
     else:
         return df
-    return pandas.read_excel(filename)
 
 def readExcel(roadId,filename):
     df = pandas.read_excel(filename)
@@ -28,7 +28,6 @@ def readExcel(roadId,filename):
         return df[df['road']==roadId]
     else:
         return df
-    return pandas.read_excel(filename)
 
 def newTrafficEntry(road):
     return {
