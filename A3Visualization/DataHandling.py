@@ -1,20 +1,34 @@
-import csv
 import os
-import re
 from bs4 import BeautifulSoup
 import pandas
 
-def readBridges(filename='../WBSIM/infrastructure/BMMS_overview.xlsx'):
-    return pandas.read_csv(filename)
+def readBridges(roadId='', filename='../WBSIM/infrastructure/BMMS_overview.xlsx'):
+    return readExcel(roadId=roadId,filename=filename)
 
-def readRoads(filename='../WBSIM/infrastructure/_roads3.csv'):
-    return pandas.read_csv(filename)
+def readRoads(roadId='', filename='../WBSIM/infrastructure/_roads3.csv'):
+    return readCSV(roadId=roadId,filename=filename)
 
-def readTrafficCSV(filename='traffic.csv'):
-    return pandas.read_csv(filename)
+def readTraffic(roadId='', filename='traffic.csv'):
+    return readCSV(roadId=roadId,filename=filename)
 
-def readWidths(filename='widths.csv'):
-    return pandas.read_csv(filename, sep='\t')
+def readWidths(roadId='', filename='widths.csv'):
+    return readCSV(roadId=roadId,filename=filename)
+
+def readCSV(roadId,filename):
+    df = pandas.read_csv(filename)
+    if roadId != '':
+        return df[df['road']==roadId]
+    else:
+        return df
+    return pandas.read_excel(filename)
+
+def readExcel(roadId,filename):
+    df = pandas.read_excel(filename)
+    if roadId != '':
+        return df[df['road']==roadId]
+    else:
+        return df
+    return pandas.read_excel(filename)
 
 def newTrafficEntry(road):
     return {
@@ -133,7 +147,7 @@ def parseWidthInfo():
                 print ('Active: {}'.format(roadId), end="\r")
 
                 widths = pandas.read_csv(roadDirectory+filename,sep='\t')
-                widths.rename(columns={'roadId':'road'},inplace=True)
+                widths.rename(columns={'roadNo':'road'},inplace=True)
 
                 if len(widths) == 0:
                     print('Skipping empty road {}'.format(roadId))
@@ -144,7 +158,7 @@ def parseWidthInfo():
         if len(allWidths) > 0:
             writeAllWidths(pandas.concat(allWidths))
 
-        print('Completed parsing road data.\n')
+        print('Completed parsing width data.\n')
 
 def writeAllWidths(rows, filename='widths.csv'):
     rows.to_csv(filename,index=False)
