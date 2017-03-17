@@ -3,6 +3,10 @@ import re
 from bs4 import BeautifulSoup
 import pandas
 
+def readRoadIds(filename='road_ids.csv'):
+    df = pandas.read_csv(filename)
+    return list(df['road'])
+
 def readBridges(roadId='', filename='../WBSIM/infrastructure/BMMS_overview.xlsx'):
     return readExcel(roadId=roadId,filename=filename)
 
