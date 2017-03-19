@@ -3,8 +3,10 @@ import re
 from bs4 import BeautifulSoup
 import pandas
 
-def readRoadIds(filename='road_ids.csv'):
+def readRoadIds(filename='road_ids.csv',typeChar=None):
     df = pandas.read_csv(filename)
+    if typeChar is not None:
+        df = df[df['road'].str[:1] == typeChar]
     return list(df['road'])
 
 def readBridges(roadId='', filename='../WBSIM/infrastructure/BMMS_overview.xlsx'):
