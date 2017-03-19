@@ -2,13 +2,14 @@ import DataHandling
 from SegmentUtils import SegmentDataFormatter, SegmentDataMerger, SegmentVulnerabilityCalculator, SegmentDataGrouper, SegmentDataProvider
 
 class SuperSegment(object):
-	def __init__(self, road, lrp, lat, lon, vulnerability):
+	def __init__(self, road, lrp, lat, lon, vulnerability, traffic):
 		self.name = "segment_" + road + "_" + lrp
 		self.road = road
 		self.lrp = lrp
 		self.lat = lat
 		self.lon = lon
 		self.vulnerability = vulnerability
+		self.originalTraffic = traffic
 
 	def __gt__(self, that):
 		return self.vulnerability > that.vulnerability
@@ -17,22 +18,30 @@ class SuperSegment(object):
 		return self.vulnerability == that.vulnerability
 
 class SegmentBuilder(object):
-	def __init__(self, grouping_size):
+	def __init__(self, grouping_size, mode):
 		self.grouping_size = grouping_size
+		self.road_ids = []
+		if mode == 'short':
+			self.road_ids = ['N1','N2','N3','N4','N5']
+		elif mode == 'all':
+			self.road_ids = DataHandling.readRoadIds()
+		else:
+			for ch in list(mode):
+				self.road_ids.extend(DataHandling.readRoadIds(typeChar=ch))
 
-	def buildShort(self, scenario):
-		return self.buildSelection(scenario, ['N1', 'N2', 'N3', 'N4', 'N5'])
-
-	def buildAll(self, scenario):
-		return self.buildSelection(scenario, DataHandling.readRoadIds())
-
-	def buildSelection(self, scenario, road_ids):
-		return [s for road_id in road_ids for s in self.build(road_id, scenario)]
+	def buildSelection(self, scenario):
+		all_data = []
+		for road_id in self.road_ids:
+			all_data.extend(self.build(road_id, scenario))
+		return all_data
+		#return [s for road_id in road_ids for s in self.build(road_id, scenario)] EEB
 
 	def build(self, road_id, scenario):
+		print('{} - '.format(road_id), end='')
+
 		provider = SegmentDataProvider()
 		grouper = SegmentDataGrouper(self.grouping_size)
-		
+
 		truck_capacity = [15,10,5]
 		social_car_capacity = [45,30,15,6,4,2,2,1,2,1]
 
@@ -44,10 +53,11 @@ class SegmentBuilder(object):
 
 		calculator = SegmentVulnerabilityCalculator(truck_capacity, social_car_capacity, scenario)
 		vulnerability_data = calculator.calculate(road_data)
-		
-		segment_data = grouper.group(bridge_data, vulnerability_data) 
 
-		return list(map(lambda row: self.buildSegment(row), segment_data))
+		segment_data = grouper.group(bridge_data, vulnerability_data)
+
+		return segment_data
+		#return list(map(lambda row: self.buildSegment(row), segment_data))
 
 	def buildSegment(self, row):
 		road = row['road']
@@ -55,5 +65,6 @@ class SegmentBuilder(object):
 		lat = row['Latitude']
 		lon = row['Longitude']
 		vulnerability = float(row['BridgeFailureLikelihood']) * float(row['TotalEconomicVulnerability'])
+		traffic = float(row['TotalEconomicVulnerability'])
 
-		return SuperSegment(road, lrp, lat, lon, vulnerability)
+		return SuperSegment(road, lrp, lat, lon, vulnerability, traffic)

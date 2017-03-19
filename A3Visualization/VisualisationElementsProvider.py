@@ -29,39 +29,23 @@ class VisualisationElementsProvider(object):
 		self.mode = mode
 
 	def provide(self):
-		builder = SegmentBuilder(self.grouping_size)
+		builder = SegmentBuilder(self.grouping_size, self.mode)
 
 		elements = {}
 
 		for scenario in self.scenarios:
-			self.addScenario(elements, self.n, builder, scenario)
-
-		return list(elements.values())
-
-	def addScenario(self, elements, n, builder, scenario):
-		if self.mode == 'short':
-			segments = self.top(n, builder.buildShort(scenario))
-		else:
-			segments = self.top(n, builder.buildAll(scenario))
-
-		for segment in segments:
-			if segment.name in elements:
-				elements[segment.name].membership.append(scenario.name)
-			else:
-				elements[segment.name] = VisualisationElement(segment, [scenario.name])
+			print('\nCurrent scenario: {}'.format(scenario.name))
+			elements[scenario.name] = builder.buildSelection(scenario)
 
 		return elements
 
 	def top(self, n, segments):
 		return list(sorted(segments)[-n:])
 
-scenarios = [
-	Scenario('linear', 0.1, 0.2, 0.3, 0.4),
-	Scenario('log', 0.1, 0.2, 0.25, 0.3),
-	Scenario('exp', 0.1, 0.2, 0.4, 0.8)
-]
-
-res = VisualisationElementsProvider(scenarios, 5, 40).provide()
-
-for r in res:
-	print(r)
+# scenarios = [
+# 	Scenario('linear', 0.1, 0.2, 0.3, 0.4),
+# 	Scenario('log', 0.1, 0.2, 0.25, 0.3),
+# 	Scenario('exp', 0.1, 0.2, 0.4, 0.8)
+# ]
+#
+# res = VisualisationElementsProvider(scenarios, 5, 40, mode='N').provide()
