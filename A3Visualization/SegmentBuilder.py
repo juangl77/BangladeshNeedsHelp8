@@ -25,6 +25,8 @@ class SegmentBuilder(object):
 			self.road_ids = ['N1','N2','N3','N4','N5']
 		elif mode == 'all':
 			self.road_ids = DataHandling.readRoadIds()
+		elif mode == 'short-z':
+			self.road_ids = DataHandling.readRoadIds(filename='zroads.csv')
 		else:
 			for ch in list(mode):
 				self.road_ids.extend(DataHandling.readRoadIds(typeChar=ch))
