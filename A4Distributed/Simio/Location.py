@@ -23,18 +23,3 @@ class Location():
 		worksheet.write_number(columnMapping["X"].format(index), self.x)
 		worksheet.write_number(columnMapping["Y"].format(index), self.y)
 		worksheet.write_number(columnMapping["Z"].format(index), self.z)
-
-	@staticmethod
-	def centerOfSegment(start, end):
-
-		lat1,lon1,lat2,lon2 = map(math.radians, [start.lat,start.lon,end.lat,end.lon])
-		dLon = lon2-lon1
-    	dLat = lat2-lat1
-
-		bx = math.cos(lat2) * math.cos(dLon)
-		by = math.cos(lat2) * math.sin(dLon)
-
-		lat3 = math.atan2(math.sin(lat1) + math.sin(lat2), math.sqrt((math.cos(lat1) + bx) * (math.cos(lat1) + bx) + by * by))
-		lon3 = lon1 + math.atan2(by, math.cos(lat1) + bx)
-
-		return Location(math.degrees(lat3),math.degrees(lon3))

@@ -4,11 +4,10 @@ from BridgeIndexer import BridgeIndexer
 from DataReader import DataReader
 import ColumnMapping
 
-reader = DataReader("n1_bridges.csv", "n1_road.csv")
+reader = DataReader("data/bridges_n1.csv", "data/roads_n1.csv","data/widths_n1.csv", "data/traffic_n1.csv")
 indexer = BridgeIndexer(reader.readBridges())
-# indexer.cleanDuplicates()
 
-builder = DataBuilder(reader.readRoads(), indexer)
+builder = DataBuilder(reader.readRoads(), indexer, reader.readTraffic())
 (objects, links, vertices) = builder.build()
 
 ColumnMapping.init()
