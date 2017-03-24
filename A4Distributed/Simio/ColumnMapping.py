@@ -6,11 +6,11 @@ def init():
 def initObjects():
 	global objectColumnNames
 	objectColumnNames = [
-		"Object Class", "Object Name", "X", "Y", "Z", "Length", "Width", "Height", 
-		"InitialDesiredSpeed", "EntityType", "InterarrivalTime", "InitialTravelerCapacity", 
-		"Category", "EnteredAddOnProcess", "RunInitializedAddOnProcess", "ReportStatistics"
+		"Object Class", "Object Name", "X", "Y", "Z", "Length", "Width", "Height",
+		"InitialDesiredSpeed", "EntityType", "InterarrivalTime", "InitialTravelerCapacity",
+		"Category", "EnteredAddOnProcess", "RunInitializedAddOnProcess", "ReportStatistics","BridgeLength"
 	]
-	
+
 	global objectColumnMapping
 	objectColumnMapping = {}
 
@@ -20,7 +20,7 @@ def initObjects():
 def initLinks():
 	global linkColumnNames
 	linkColumnNames = [
-		"Link Class", "Link Name", "From Node", "To Node", "Network", "Width", "Height", "Type", "DrawnToScale"
+		"Link Class", "Link Name", "From Node", "To Node", "Network", "Width", "Height", "Type", "DrawnToScale", "AllowPassing", "NumberLanes"
 	]
 
 	global linkColumnMapping
