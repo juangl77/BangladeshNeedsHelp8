@@ -49,6 +49,9 @@ class RoadData():
 		return self.road + "_" + self.lrp
 
 class Traffic():
+	percentageDuringRush = 0.5
+	numberRushHours = 8
+
 	def __init__(self, truck=0, bus=0, passenger=0):
 		self.truck = truck
 		self.bus = bus
@@ -116,9 +119,15 @@ class DataReader():
 				trafficEntry = TrafficData(dict(group.iloc[0]))
 
 				for index, row in group.iterrows():
-					traffic = Traffic((int(row['heavyTruck']) + int(row['mediumTruck']) + int(row['smallTruck']))/365.0,
-									  (int(row['largeBus']) + int(row['mediumBus']) + int(row['microBus'])/365.0),
-									  (int(row['utility']) + int(row['car']) + int(row['autoRickshaw']) + int(row['motorcycle']))/365.0)
+
+					truckTraffic = (int(row['heavyTruck']) + int(row['mediumTruck']) + int(row['smallTruck']))
+					busTraffic = (int(row['largeBus']) + int(row['mediumBus']) + int(row['microBus']))
+					passengerTraffic = (int(row['utility']) + int(row['car']) + int(row['autoRickshaw']) + int(row['motorcycle']))
+
+					# Normalize traffic per lane
+					traffic = Traffic(int(round(truckTraffic/trafficEntry.numberLanes)),
+									  int(round(busTraffic/trafficEntry.numberLanes)),
+									  int(round(passengerTraffic/trafficEntry.numberLanes)) )
 
 					if(row['side_of_road'] == 'Left'):
 						trafficEntry.leftTraffic = traffic
