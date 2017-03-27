@@ -1,3 +1,5 @@
+from math import floor
+
 def init():
 	initObjects()
 	initLinks()
@@ -7,20 +9,31 @@ def initObjects():
 	global objectColumnNames
 	objectColumnNames = [
 		"Object Class", "Object Name", "X", "Y", "Z", "Length", "Width", "Height",
-		"InitialDesiredSpeed", "EntityType", "InterarrivalTime", "InitialTravelerCapacity",
-		"Category", "EnteredAddOnProcess", "RunInitializedAddOnProcess", "ReportStatistics","BridgeLength"
+		"InitialDesiredSpeed", "EntityType", "RushInterarrivalTimeTruck", "RushInterarrivalTimeBus", "RushInterarrivalTimePassenger",
+		"NormalInterarrivalTimeTruck", "NormalInterarrivalTimeBus", "NormalInterarrivalTimePassenger", "InitialTravelerCapacity",
+		"MaximumArrivalsTruck", "MaximumArrivalsBus", "MaximumArrivalsPassenger",
+		"Category", "EnteredAddOnProcess", "RunInitializedAddOnProcess", "ReportStatistics", "BridgeLength", "HasSink",
+		"PercentTruckTrafficToDestroy", "PercentBusTrafficToDestroy", "PercentPassengerTrafficToDestroy"
 	]
 
 	global objectColumnMapping
 	objectColumnMapping = {}
 
 	for i in range(0, len(objectColumnNames)):
-		objectColumnMapping[objectColumnNames[i]] = "" + chr(ord('A')+i) + "{}"
-
+		temp = i % 26
+		wrapped = floor(i/26)
+		objectColumnMapping[objectColumnNames[i]] = ""
+		if wrapped == 0:
+			objectColumnMapping[objectColumnNames[i]] += chr(ord('A')+temp)
+		else:
+			objectColumnMapping[objectColumnNames[i]] += chr(ord('A')+wrapped-1)
+			objectColumnMapping[objectColumnNames[i]] += chr(ord('A')+temp)
+		objectColumnMapping[objectColumnNames[i]] += "{}"
+		
 def initLinks():
 	global linkColumnNames
 	linkColumnNames = [
-		"Link Class", "Link Name", "From Node", "To Node", "Network", "Width", "Height", "Type", "DrawnToScale", "AllowPassing", "NumberLanes"
+		"Link Class", "Link Name", "From Node", "To Node", "Network", "Width", "Height", "Type", "DrawnToScale", "AllowPassing"
 	]
 
 	global linkColumnMapping
