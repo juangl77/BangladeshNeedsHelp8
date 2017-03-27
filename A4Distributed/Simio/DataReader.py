@@ -5,7 +5,7 @@ import pandas
 class BridgeData():
 	def __init__(self, row):
 		self.road = row['road']
-		self.lrp = row['LRPName'].strip().upper()
+		self.lrp = row['lrp'].strip().upper()
 		self.length = row['length']
 		self.condition = row['condition']
 		self.lat = row['lat']

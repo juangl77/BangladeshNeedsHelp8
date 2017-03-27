@@ -28,11 +28,11 @@ class DataBuilder():
 		links = []
 		vertices = []
 		tempVertexData = []
-		# objects = [TruckObject(Location(23.7, 90.4), 48),BusObject(Location(23.7,89.996), 48),PassengerVehicleObject(Location(23.7,89.992), 48)]
-		objects = []
+
 		traffics = []
 		starts = []
 		ends = []
+		objects = []
 
 		objects.append(self.buildDhaka(self.startData, self.trafficData[0]))
 
@@ -129,6 +129,8 @@ class DataBuilder():
 
 		print('Added {} bridges with {} category UK.'.format(self.bridgeCount,self.categoryECount))
 
+		self.index.saveUpdatedBridgeData()
+
 		return (objects, links, vertices)
 
 	def buildChittagong(self, dataPoint):
@@ -158,7 +160,8 @@ class DataBuilder():
 			condition = bridge.condition
 		else:
 			self.categoryECount += 1
-			condition = "UK"
+			condition = 'UK'
+			self.index.addBridgeToData(startNodeData, length, 'UK')
 
 		bridgeStart = BridgeObject(startNodeData.road, bridgeStartLocation, startNodeData.lrp, condition, length)
 		bridgeEnd = EndBridgeObject(endNodeData.road, bridgeEndLocation, endNodeData.lrp, condition, length)
