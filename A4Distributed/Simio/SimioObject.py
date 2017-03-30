@@ -63,14 +63,7 @@ class MidPathSinksObject(SimioObject):
 class SourcesObject(SimioObject):
 	def __init__(self, objectClass, objectName, location, lrp, traffic, road, scalingFactor):
 		SimioObject.__init__(self, objectClass, objectName, location, lrp, road)
-		# self.rushInterarrivalTimeTruck = (1.0/(traffic.truck/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
-		# self.rushInterarrivalTimeBus = (1.0/(traffic.bus/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
-		# self.rushInterarrivalTimePassenger = (1.0/(traffic.passenger/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
-		#
-		# self.normalInterarrivalTimeTruck = (1.0/(traffic.truck/scalingFactor*(1-traffic.percentageDuringRush)))*(24-traffic.numberRushHours)
-		# self.normalInterarrivalTimeBus = (1.0/(traffic.bus/scalingFactor*(1-traffic.percentageDuringRush)))*(24-traffic.numberRushHours)
-		# self.normalInterarrivalTimePassenger = (1.0/(traffic.passenger/scalingFactor*(1-traffic.percentageDuringRush)))*(24-traffic.numberRushHours)
-
+		
 		self.rushInterarrivalTimeTruck = (1.0/(traffic.truck*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
 		self.rushInterarrivalTimeBus = (1.0/(traffic.bus*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
 		self.rushInterarrivalTimePassenger = (1.0/(traffic.passenger*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
@@ -125,6 +118,7 @@ class MidPathSourcesObject(SourcesObject):
 class BridgeObject(SimioObject):
 	def __init__(self, road, location, lrp, category, length):
 		SimioObject.__init__(self, "Bridge", road+"_"+lrp, location, lrp, road)
+		self.lrp = lrp
 		self.category = category
 		self.length = length
 		self.initialTravelerCapacity = "SmallBridgeCapacity" if length < 50 else "LargeBridgeCapacity"
@@ -148,6 +142,7 @@ class BridgeObject(SimioObject):
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):
 		super(BridgeObject, self).writeToWorksheet(worksheet, columnMapping, index)
+		worksheet.write_string(columnMapping["lrp"].format(index), self.category)
 		worksheet.write_string(columnMapping["Category"].format(index), self.category)
 		worksheet.write_number(columnMapping["BridgeLength"].format(index), self.length)
 		worksheet.write_string(columnMapping["InitialTravelerCapacity"].format(index), self.initialTravelerCapacity)

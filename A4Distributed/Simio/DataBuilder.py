@@ -132,9 +132,9 @@ class DataBuilder():
 		objects.extend(starts)
 		objects.extend(ends)
 
-		print('Added {} bridges with {} category UK.'.format(self.bridgeCount,self.categoryECount))
+		print('Added {} bridges with {} bridges not matched.'.format(self.bridgeCount,self.categoryECount))
 
-		self.index.saveUpdatedBridgeData()
+		#self.index.saveUpdatedBridgeData() MATCH
 
 		return (objects, links, vertices)
 
@@ -163,10 +163,11 @@ class DataBuilder():
 		bridge = self.index.find(startNodeData.lrp)
 		if bridge is not None:
 			condition = bridge.condition
+			#self.index.matchedBridges.append(bridge) #MATCH
 		else:
 			self.categoryECount += 1
 			condition = 'UK'
-			self.index.addBridgeToData(startNodeData, length, 'UK')
+			#self.index.addBridgeToData(startNodeData, length, 'UK') #MATCH
 
 		bridgeStart = BridgeObject(startNodeData.road, bridgeStartLocation, startNodeData.lrp, condition, length)
 		bridgeEnd = EndBridgeObject(endNodeData.road, bridgeEndLocation, endNodeData.lrp, condition, length)
