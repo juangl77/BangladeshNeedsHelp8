@@ -1,4 +1,4 @@
-"index";"category";"constructionYear";"lat";"length";"lon";"lrp";"road";"broken"
+"rowId";"category";"constructionYear";"lat";"length";"lon";"lrp";"road";"broken"
 0;"C";1986;23.70505989;397.0;90.52321415;"LRP008B";"N1";0
 1;"A";1986;23.68841233;9.3;90.54855853;"LRP012A";"N1";0
 2;"B";2003;23.66330907;5.55;90.56385699;"LRP016A";"N1";0
