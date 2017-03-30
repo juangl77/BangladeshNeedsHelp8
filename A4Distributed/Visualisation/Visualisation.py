@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import matplotlib
 from matplotlib import gridspec
 
-def plot_traffic_density(segments,HeavyTrucks,MediumTrucks,SmallTrucks,Economic,broken_bridges):
-	number_segments = len(segments)
+def plot_traffic_density(HeavyTrucks,MediumTrucks,SmallTrucks,TimeInSystem,broken_bridges):
+	number_segments = len(TimeInSystem)
 	x = np.arange(number_segments)
 	y1 = np.ones(number_segments)
 	y2 = np.array(HeavyTrucks)
@@ -13,7 +13,7 @@ def plot_traffic_density(segments,HeavyTrucks,MediumTrucks,SmallTrucks,Economic,
 	y4 = np.array(SmallTrucks)
 	y5 = np.array(broken_bridges)
 
-	xmin = x.min()
+	xmin = 0
 	xmax = x.max()
 
 	stacked1 = []
@@ -35,18 +35,21 @@ def plot_traffic_density(segments,HeavyTrucks,MediumTrucks,SmallTrucks,Economic,
 
 	# Two subplots, the axes array is 1-d
 	fig = plt.figure(figsize=(15, 8))
-	gs = gridspec.GridSpec(3, 1, height_ratios=[5,1,3])     
+	gs = gridspec.GridSpec(3, 1, height_ratios=[5,0.6,2])     
 
 	ax0 = plt.subplot(gs[0])
 	ax0.fill_between(x, 0, y2, label = 'HeavyTrucks', color = '#44FFD1')
 	ax0.fill_between(x, y2, stacked1, label = 'MediumTrucks', color = '#8F2D56')
 	ax0.fill_between(x, stacked1, stacked2, label = 'SmallTrucks', color = '#00A8E8')
+	#ax0.plot([x[int(len(x)*0.1)],ymin],[x[int(len(x)*0.1)],ymax])
 
 	ax1 = plt.subplot(gs[1])
-	p1 = ax1.hexbin(x, y1, Economic, gridsize=number_segments-1, cmap='RdYlGn_r')
+	p1 = ax1.hexbin(x, y1, TimeInSystem, gridsize=len(TimeInSystem), cmap='RdYlGn_r')
+	#ax1.plot([x[int(len(x)*0.1)],0.9999],[x[int(len(x)*0.1)],1.0001])
 
 	ax2 = plt.subplot(gs[2])
 	p2 = ax2.bar(x, y5, width = 1, color='black', label = 'Broken bridges', align = 'edge')
+	#ax2.plot([x[int(len(x)*0.1)],0],[x[int(len(x)*0.1)],y5max])
 
 	# Set titles of subplots
 	ax0.set_title('Traffic density [number of trucks per lane per day]')
@@ -69,11 +72,12 @@ def plot_traffic_density(segments,HeavyTrucks,MediumTrucks,SmallTrucks,Economic,
 	ax2.get_xaxis().set_visible(True)
 	ax2.set_frame_on(True)
 	ax2.get_yaxis().set_ticks([0,y5max])
-
+    
 	# Set xlabel for graphs
-	plt.xlabel('Chainage')
-	if number_segments <= 150:
-		plt.xticks(x,segments,rotation='vertical')
+	plt.xlabel('Location')
+	ticks = [x[0],x[int(len(x)*0.1)],x[int(len(x)*0.2)],x[int(len(x)*0.3)],x[int(len(x)*0.4)],x[int(len(x)*0.5)],x[int(len(x)/8*5)],x[int(len(x)*0.75)],x[int(len(x)/8*7)],x[-1]]
+	names = ['Dhaka','Homna','Comilla','Bangadda','Narayanhat','Chittagong','Chandanaish','Chakaria','Umkhali','Sabrang']
+	plt.xticks(ticks,names)
 
 	# Colorbar for Total vulnerability graph    
 	cb = fig.colorbar(p1, ax=ax2, orientation='horizontal', pad=0.6)
