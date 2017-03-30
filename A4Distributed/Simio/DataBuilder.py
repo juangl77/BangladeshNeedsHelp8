@@ -166,8 +166,8 @@ class DataBuilder():
 			#self.index.matchedBridges.append(bridge) #MATCH
 		else:
 			self.categoryECount += 1
-			category = 'UK'
-			#self.index.addBridgeToData(startNodeData, length, 'UK') #MATCH
+			category = 'E'
+			#self.index.addBridgeToData(startNodeData, length, 'E') #MATCH
 
 		bridgeStart = BridgeObject(startNodeData.road, bridgeStartLocation, startNodeData.lrp, category, length)
 		bridgeEnd = EndBridgeObject(endNodeData.road, bridgeEndLocation, endNodeData.lrp, category, length)
