@@ -34,7 +34,11 @@ class SimioBridgeLink(BaseSimioLink):
 class MidPathSourcesLink(BaseSimioLink):
 	def __init__(self, road, startLRP, endLRP):
 		BaseSimioLink.__init__(self)
+<<<<<<< HEAD
 		self.linkClass='TimePath'
+=======
+		self.linkClass='Connector'
+>>>>>>> 8607025440f53989a931ff7daab06d7ddee1e71b
 		self.linkName = road+"_"+startLRP+"_"+endLRP
 		self.fromNode = startLRP
 		self.toNode = road+"_"+endLRP
@@ -42,7 +46,11 @@ class MidPathSourcesLink(BaseSimioLink):
 class MidPathSinksLink(BaseSimioLink):
 	def __init__(self, road, startLRP, endLRP):
 		BaseSimioLink.__init__(self)
+<<<<<<< HEAD
 		self.linkClass='TimePath'
+=======
+		self.linkClass='Connector'
+>>>>>>> 8607025440f53989a931ff7daab06d7ddee1e71b
 		self.linkName = road+"_"+startLRP+"_"+endLRP
 		self.fromNode = road+"_"+startLRP
 		self.toNode = endLRP
