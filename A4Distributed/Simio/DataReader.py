@@ -86,12 +86,13 @@ class TrafficData():
 
 class DataReader():
 	def __init__(self,username,password,database):
+		self.database = database
 		self.engine = create_engine('mysql+mysqlconnector://'+ username + ':' + password + '@localhost/'+database)
 
 	def readBridges(self):
 		bridges = []
 
-		df = pandas.read_sql('SELECT * FROM epa1351group8.bridges', con=self.engine)
+		df = pandas.read_sql('SELECT * FROM '+self.database+'.bridges', con=self.engine)
 		for index, row in df.iterrows():
 			bridges.append(BridgeData(row.to_dict()))
 
@@ -100,7 +101,7 @@ class DataReader():
 	def readRoads(self):
 		roads = []
 
-		df = pandas.read_sql('SELECT * FROM epa1351group8.roads', con=self.engine)
+		df = pandas.read_sql('SELECT * FROM '+self.database+'.roads', con=self.engine)
 		for index, row in df.iterrows():
 			roads.append(RoadData(row.to_dict()))
 		return roads
@@ -108,7 +109,7 @@ class DataReader():
 	def readTraffic(self):
 		trafficEntries = []
 
-		df = pandas.read_sql('SELECT * FROM epa1351group8.traffic', con=self.engine)
+		df = pandas.read_sql('SELECT * FROM '+self.database+'.traffic', con=self.engine)
 		for linkId, group in df.groupby('linkId'):
 			for end, group in group.groupby('width_end'):
 				trafficEntry = TrafficData(dict(group.iloc[0]))

@@ -4,7 +4,7 @@ from BridgeIndexer import BridgeIndexer
 from DataReader import DataReader
 import ColumnMapping
 
-reader = DataReader('EPA1351USER','ellen4mok','epa1351group8')
+reader = DataReader('epa1351user','xgt65RR##','epa1351group08')
 indexer = BridgeIndexer(reader.readBridges())
 
 builder = DataBuilder(reader.readRoads(), indexer, reader.readTraffic())
