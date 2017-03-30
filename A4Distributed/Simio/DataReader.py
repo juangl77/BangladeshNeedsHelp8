@@ -7,7 +7,7 @@ class BridgeData():
 		self.road = row['road']
 		self.lrp = row['lrp'].strip().upper()
 		self.length = row['length']
-		self.condition = row['condition']
+		self.category = row['category']
 		self.lat = row['lat']
 		self.lon = row['lon']
 		self.constructionYear = row['constructionYear']
@@ -24,7 +24,7 @@ class BridgeData():
 			'road':self.road,
 			'lrp':self.lrp,
 			'length':self.length,
-			'condition':self.condition,
+			'category':self.category,
 			'lat':self.lat,
 			'lon':self.lon,
 			'constructionYear':self.constructionYear
