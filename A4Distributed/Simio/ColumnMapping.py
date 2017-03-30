@@ -12,7 +12,7 @@ def initObjects():
 		"InitialDesiredSpeed", "EntityType", "RushInterarrivalTimeTruck", "RushInterarrivalTimeBus", "RushInterarrivalTimePassenger",
 		"NormalInterarrivalTimeTruck", "NormalInterarrivalTimeBus", "NormalInterarrivalTimePassenger", "InitialTravelerCapacity",
 		"MaximumArrivalsTruck", "MaximumArrivalsBus", "MaximumArrivalsPassenger",
-		"lrp", "Category", "EnteredAddOnProcess", "RunInitializedAddOnProcess", "ReportStatistics", "BridgeLength", "HasSink",
+		"LRPName", "Category", "EnteredAddOnProcess", "RunInitializedAddOnProcess", "ReportStatistics", "BridgeLength", "HasSink",
 		"PercentTruckTrafficToDestroy", "PercentBusTrafficToDestroy", "PercentPassengerTrafficToDestroy"
 	]
 

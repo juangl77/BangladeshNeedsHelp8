@@ -63,7 +63,7 @@ class MidPathSinksObject(SimioObject):
 class SourcesObject(SimioObject):
 	def __init__(self, objectClass, objectName, location, lrp, traffic, road, scalingFactor):
 		SimioObject.__init__(self, objectClass, objectName, location, lrp, road)
-		
+
 		self.rushInterarrivalTimeTruck = (1.0/(traffic.truck*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
 		self.rushInterarrivalTimeBus = (1.0/(traffic.bus*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
 		self.rushInterarrivalTimePassenger = (1.0/(traffic.passenger*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
@@ -142,7 +142,7 @@ class BridgeObject(SimioObject):
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):
 		super(BridgeObject, self).writeToWorksheet(worksheet, columnMapping, index)
-		worksheet.write_string(columnMapping["lrp"].format(index), self.category)
+		worksheet.write_string(columnMapping["LRPName"].format(index), self.lrp)
 		worksheet.write_string(columnMapping["Category"].format(index), self.category)
 		worksheet.write_number(columnMapping["BridgeLength"].format(index), self.length)
 		worksheet.write_string(columnMapping["InitialTravelerCapacity"].format(index), self.initialTravelerCapacity)
