@@ -64,6 +64,7 @@ class SourcesObject(SimioObject):
 	def __init__(self, objectClass, objectName, location, lrp, traffic, road, scalingFactor):
 		SimioObject.__init__(self, objectClass, objectName, location, lrp, road)
 <<<<<<< HEAD
+<<<<<<< HEAD
 		self.rushInterarrivalTimeTruck = (1.0/(traffic.truck/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
 		self.rushInterarrivalTimeBus = (1.0/(traffic.bus/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
 		self.rushInterarrivalTimePassenger = (1.0/(traffic.passenger/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
@@ -80,6 +81,9 @@ class SourcesObject(SimioObject):
 		# self.normalInterarrivalTimeBus = (1.0/(traffic.bus/scalingFactor*(1-traffic.percentageDuringRush)))*(24-traffic.numberRushHours)
 		# self.normalInterarrivalTimePassenger = (1.0/(traffic.passenger/scalingFactor*(1-traffic.percentageDuringRush)))*(24-traffic.numberRushHours)
 
+=======
+		
+>>>>>>> a55fd8e90ff598b946e83e692c8aff999543845a
 		self.rushInterarrivalTimeTruck = (1.0/(traffic.truck*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
 		self.rushInterarrivalTimeBus = (1.0/(traffic.bus*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
 		self.rushInterarrivalTimePassenger = (1.0/(traffic.passenger*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
@@ -87,7 +91,10 @@ class SourcesObject(SimioObject):
 		self.normalInterarrivalTimeTruck = (1.0/(traffic.truck*(1-traffic.percentageDuringRush)))/(24/(24-traffic.numberRushHours))
 		self.normalInterarrivalTimeBus = (1.0/(traffic.bus*(1-traffic.percentageDuringRush)))/(24/(24-traffic.numberRushHours))
 		self.normalInterarrivalTimePassenger = (1.0/(traffic.passenger*(1-traffic.percentageDuringRush)))/(24/(24-traffic.numberRushHours))
+<<<<<<< HEAD
 >>>>>>> 8607025440f53989a931ff7daab06d7ddee1e71b
+=======
+>>>>>>> a55fd8e90ff598b946e83e692c8aff999543845a
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):
 		super(SourcesObject, self).writeToWorksheet(worksheet, columnMapping, index)
@@ -133,6 +140,7 @@ class MidPathSourcesObject(SourcesObject):
 		worksheet.write_string(columnMapping["MaximumArrivalsPassenger"].format(index), self.maximumArrivalsPassenger)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 # class DhakaObject(SimioObject):
 # 	def __init__(self, location, lrp, entityType = "SourceEntity"):
 # 		SimioObject.__init__(self, "Source", "Dhaka", location, lrp)
@@ -146,13 +154,16 @@ class MidPathSourcesObject(SourcesObject):
 
 =======
 >>>>>>> 8607025440f53989a931ff7daab06d7ddee1e71b
+=======
+>>>>>>> a55fd8e90ff598b946e83e692c8aff999543845a
 class BridgeObject(SimioObject):
 	def __init__(self, road, location, lrp, category, length):
 		SimioObject.__init__(self, "Bridge", road+"_"+lrp, location, lrp, road)
+		self.lrp = lrp
 		self.category = category
 		self.length = length
 		self.initialTravelerCapacity = "SmallBridgeCapacity" if length < 50 else "LargeBridgeCapacity"
-		self.runInitializedAddOnProcess = "SetBridgeState_"+category
+		# self.runInitializedAddOnProcess = "SetBridgeState_"+category BRIDGE_STATE
 		self.reportStatistics = "True"
 		self.enteringAddOnProcess = "VehicleEnteredBridge"
 		self.hasSink = False
@@ -172,10 +183,11 @@ class BridgeObject(SimioObject):
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):
 		super(BridgeObject, self).writeToWorksheet(worksheet, columnMapping, index)
+		worksheet.write_string(columnMapping["lrp"].format(index), self.category)
 		worksheet.write_string(columnMapping["Category"].format(index), self.category)
 		worksheet.write_number(columnMapping["BridgeLength"].format(index), self.length)
 		worksheet.write_string(columnMapping["InitialTravelerCapacity"].format(index), self.initialTravelerCapacity)
-		worksheet.write_string(columnMapping["RunInitializedAddOnProcess"].format(index), self.runInitializedAddOnProcess)
+		# worksheet.write_string(columnMapping["RunInitializedAddOnProcess"].format(index), self.runInitializedAddOnProcess) BRIDGE_STATE
 		worksheet.write_string(columnMapping["ReportStatistics"].format(index), self.reportStatistics)
 		worksheet.write_string(columnMapping["EnteredAddOnProcess"].format(index), self.enteringAddOnProcess)
 		worksheet.write_boolean(columnMapping["HasSink"].format(index), self.hasSink)

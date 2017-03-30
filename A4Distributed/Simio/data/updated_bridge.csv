@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 index,condition,constructionYear,lat,length,lon,lrp,road
 0,A,2005,23.69873866,11.3,90.45886108,LRP001A,N1
 1,A,2006,23.69466384,6.6,90.48777492,LRP004B,N1
@@ -833,6 +834,8 @@ index,condition,constructionYear,lat,length,lon,lrp,road
 830,UK,-1,20.8768604,40.0821,92.2978886,LRP465A,N1
 831,UK,-1,20.8650278,40.48131976,92.2982497,LRP466B,N1
 =======
+=======
+>>>>>>> a55fd8e90ff598b946e83e692c8aff999543845a
 ,condition,constructionYear,lat,length,lon,lrp,road
 0,A,2005,23.69873866,11.3,90.45886108,LRP001A,N1
 1,A,2006,23.69466384,6.6,90.48777492,LRP004B,N1
@@ -1658,4 +1661,7 @@ index,condition,constructionYear,lat,length,lon,lrp,road
 821,UK,,20.8889163,16.918056050242136,92.2982497,LRP463A,N1
 822,UK,,20.8768604,40.08210000031977,92.2978886,LRP465A,N1
 823,UK,,20.8650278,40.481319764040315,92.2982497,LRP466B,N1
+<<<<<<< HEAD
 >>>>>>> 8607025440f53989a931ff7daab06d7ddee1e71b
+=======
+>>>>>>> a55fd8e90ff598b946e83e692c8aff999543845a

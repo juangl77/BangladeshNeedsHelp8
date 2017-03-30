@@ -51,10 +51,14 @@ class RoadData():
 class Traffic():
 	percentageDuringRush = 0.5
 <<<<<<< HEAD
+<<<<<<< HEAD
 	numberRushHours = 8
 =======
 	numberRushHours = 6
 >>>>>>> 8607025440f53989a931ff7daab06d7ddee1e71b
+=======
+	numberRushHours = 6
+>>>>>>> a55fd8e90ff598b946e83e692c8aff999543845a
 
 	def __init__(self, truck=0, bus=0, passenger=0):
 		self.truck = truck

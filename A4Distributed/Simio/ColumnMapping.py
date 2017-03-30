@@ -12,7 +12,7 @@ def initObjects():
 		"InitialDesiredSpeed", "EntityType", "RushInterarrivalTimeTruck", "RushInterarrivalTimeBus", "RushInterarrivalTimePassenger",
 		"NormalInterarrivalTimeTruck", "NormalInterarrivalTimeBus", "NormalInterarrivalTimePassenger", "InitialTravelerCapacity",
 		"MaximumArrivalsTruck", "MaximumArrivalsBus", "MaximumArrivalsPassenger",
-		"Category", "EnteredAddOnProcess", "RunInitializedAddOnProcess", "ReportStatistics", "BridgeLength", "HasSink",
+		"lrp", "Category", "EnteredAddOnProcess", "RunInitializedAddOnProcess", "ReportStatistics", "BridgeLength", "HasSink",
 		"PercentTruckTrafficToDestroy", "PercentBusTrafficToDestroy", "PercentPassengerTrafficToDestroy"
 	]
 
@@ -29,7 +29,7 @@ def initObjects():
 			objectColumnMapping[objectColumnNames[i]] += chr(ord('A')+wrapped-1)
 			objectColumnMapping[objectColumnNames[i]] += chr(ord('A')+temp)
 		objectColumnMapping[objectColumnNames[i]] += "{}"
-		
+
 def initLinks():
 	global linkColumnNames
 	linkColumnNames = [

@@ -9,6 +9,7 @@ class BridgeIndexer():
 		bridgeData.sort( key=lambda x:x.constructionYear, reverse=True )
 		bridgeData.sort( key=lambda x:x.lrp )
 		self.bridgeData = bridgeData
+		self.matchedBridges = []
 
 	def find(self, lrp):
 		for bridge in self.bridgeData:
@@ -27,11 +28,12 @@ class BridgeIndexer():
 			'condition':condition,
 			'lat':bridgeNodeData.lat,
 			'lon':bridgeNodeData.lon,
-			'constructionYear':'',
+			'constructionYear':'-1',
 		})
 		self.bridgeData.append(newBridge)
+		self.matchedBridges.append(newBridge)
 
 	def saveUpdatedBridgeData(self):
-		bridge_dicts = [bridge.toDict() for bridge in self.bridgeData]
+		bridge_dicts = [bridge.toDict() for bridge in self.matchedBridges]
 		df = pandas.DataFrame(bridge_dicts)
-		df.to_csv('data/updated_bridge.csv')
+		df.to_csv('data/matched_bridges.csv')
