@@ -183,7 +183,7 @@ class DataBuilder():
 	def buildTempBridgeStart(self, startNodeData):
 		bridgeStartLocation = Location(startNodeData.lat, startNodeData.lon)
 		category='TEMP'
-		bridgeStart = BridgeObject(startNodeData.road, bridgeStartLocation, startNodeData.lrp, category, -1)
+		bridgeStart = BridgeObject(startNodeData.road, bridgeStartLocation, startNodeData.lrp, category, -1, -1)
 		return bridgeStart
 
 	def buildBridge(self, startNodeData, endNodeData):
@@ -200,8 +200,8 @@ class DataBuilder():
 			category = 'E'
 			#self.index.addBridgeToData(startNodeData, length, 'E') #MATCH
 
-		bridgeStart = BridgeObject(startNodeData.road, bridgeStartLocation, startNodeData.lrp, category, length)
-		bridgeEnd = EndBridgeObject(endNodeData.road, bridgeEndLocation, endNodeData.lrp, category, length)
+		bridgeStart = BridgeObject(startNodeData.road, bridgeStartLocation, startNodeData.lrp, category, length, bridge.rowId)
+		bridgeEnd = EndBridgeObject(endNodeData.road, bridgeEndLocation, endNodeData.lrp, category, length, bridge.rowId)
 		bridgeLink = SimioBridgeLink(startNodeData.road, startNodeData.lrp, endNodeData.lrp)
 
 		return (bridgeStart, bridgeEnd, bridgeLink)

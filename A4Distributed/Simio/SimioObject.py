@@ -161,9 +161,9 @@ class MidPathSourcesObject(SourcesObject):
 =======
 >>>>>>> a55fd8e90ff598b946e83e692c8aff999543845a
 class BridgeObject(SimioObject):
-	def __init__(self, road, location, lrp, category, length):
+	def __init__(self, road, location, lrp, category, length, rowId):
 		SimioObject.__init__(self, "Bridge", road+"_"+lrp, location, lrp, road)
-		self.lrp = lrp
+		self.rowId = rowId
 		self.category = category
 		self.length = length
 		self.initialTravelerCapacity = "SmallBridgeCapacity" if length < 50 else "LargeBridgeCapacity"
@@ -187,7 +187,7 @@ class BridgeObject(SimioObject):
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):
 		super(BridgeObject, self).writeToWorksheet(worksheet, columnMapping, index)
-		worksheet.write_string(columnMapping["LRPName"].format(index), self.lrp)
+		worksheet.write_number(columnMapping["RowNumber"].format(index), self.rowId)
 		worksheet.write_string(columnMapping["Category"].format(index), self.category)
 		worksheet.write_number(columnMapping["BridgeLength"].format(index), self.length)
 		worksheet.write_string(columnMapping["InitialTravelerCapacity"].format(index), self.initialTravelerCapacity)
@@ -201,8 +201,8 @@ class BridgeObject(SimioObject):
 
 
 class EndBridgeObject(BridgeObject):
-	def __init__(self, road, location, lrp, category, length):
-		BridgeObject.__init__(self, road, location, lrp, category, length)
+	def __init__(self, road, location, lrp, category, length, rowId):
+		BridgeObject.__init__(self, road, location, lrp, category, length, rowId)
 		self.enteringAddOnProcess = self.chooseInitializedAddOnProcess(length)
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):

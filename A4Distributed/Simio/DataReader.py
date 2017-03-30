@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 
 class BridgeData():
 	def __init__(self, row):
+		self.rowId = row['rowId']
 		self.road = row['road']
 		self.lrp = row['lrp'].strip().upper()
 		self.length = row['length']
