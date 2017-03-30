@@ -50,20 +50,20 @@ class DataBuilder():
 				if originalTrafficIndex != currentTrafficIndex :
 					originalTraffic = self.trafficData[originalTrafficIndex]
 					newTraffic = self.trafficData[currentTrafficIndex]
-					print(dataPoint.lrp)
+					#print(dataPoint.lrp)
 					if abs(originalTraffic.leftTraffic.bus-newTraffic.leftTraffic.bus) > self.trafficChangeThreshold*originalTraffic.leftTraffic.bus:
-						print('Bus change in traffic {} -> {}'.format(originalTraffic.leftTraffic.bus,newTraffic.leftTraffic.bus))
+						#print('Bus change in traffic {} -> {}'.format(originalTraffic.leftTraffic.bus,newTraffic.leftTraffic.bus))
 						busChange = True
 						trafficChange.bus = newTraffic.leftTraffic.bus-originalTraffic.leftTraffic.bus
 					if abs(originalTraffic.leftTraffic.truck-newTraffic.leftTraffic.truck) > self.trafficChangeThreshold*originalTraffic.leftTraffic.truck:
-						print('Truck change in traffic {} -> {}'.format(originalTraffic.leftTraffic.truck,newTraffic.leftTraffic.truck))
+						#print('Truck change in traffic {} -> {}'.format(originalTraffic.leftTraffic.truck,newTraffic.leftTraffic.truck))
 						truckChange = True
 						trafficChange.truck = newTraffic.leftTraffic.truck-originalTraffic.leftTraffic.truck
 					if abs(originalTraffic.leftTraffic.passenger-newTraffic.leftTraffic.passenger) > self.trafficChangeThreshold*originalTraffic.leftTraffic.passenger:
-						print('Passenger change in traffic {} -> {}'.format(originalTraffic.leftTraffic.passenger,newTraffic.leftTraffic.passenger))
+						#print('Passenger change in traffic {} -> {}'.format(originalTraffic.leftTraffic.passenger,newTraffic.leftTraffic.passenger))
 						passengerChange = True
 						trafficChange.passenger = newTraffic.leftTraffic.passenger-originalTraffic.leftTraffic.passenger
-					print()
+					#print()
 
 				if dataPoint.gap == "BS":
 					startNodeData = dataPoint

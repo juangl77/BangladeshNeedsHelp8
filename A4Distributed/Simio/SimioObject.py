@@ -128,7 +128,7 @@ class BridgeObject(SimioObject):
 		self.category = category
 		self.length = length
 		self.initialTravelerCapacity = "SmallBridgeCapacity" if length < 50 else "LargeBridgeCapacity"
-		self.runInitializedAddOnProcess = "SetBridgeState_"+category
+		# self.runInitializedAddOnProcess = "SetBridgeState_"+category BRIDGE_STATE
 		self.reportStatistics = "True"
 		self.enteringAddOnProcess = "VehicleEnteredBridge"
 		self.hasSink = False
@@ -151,7 +151,7 @@ class BridgeObject(SimioObject):
 		worksheet.write_string(columnMapping["Category"].format(index), self.category)
 		worksheet.write_number(columnMapping["BridgeLength"].format(index), self.length)
 		worksheet.write_string(columnMapping["InitialTravelerCapacity"].format(index), self.initialTravelerCapacity)
-		worksheet.write_string(columnMapping["RunInitializedAddOnProcess"].format(index), self.runInitializedAddOnProcess)
+		# worksheet.write_string(columnMapping["RunInitializedAddOnProcess"].format(index), self.runInitializedAddOnProcess) BRIDGE_STATE
 		worksheet.write_string(columnMapping["ReportStatistics"].format(index), self.reportStatistics)
 		worksheet.write_string(columnMapping["EnteredAddOnProcess"].format(index), self.enteringAddOnProcess)
 		worksheet.write_boolean(columnMapping["HasSink"].format(index), self.hasSink)
