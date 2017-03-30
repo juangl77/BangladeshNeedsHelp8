@@ -7,9 +7,7 @@ from Visualisation import plot_traffic_density
 from MySQL import Database
 
 class Animator(object):
-	def animate(self, interval, start_time, end_time):
-
-		db = Database('127.0.0.1', 'Discrete', 'epa1351user', 'qwertyu1234')
+	def animate(self, db, interval, start_time, end_time):
 		db.connect()
 
 		fig = plt.figure(figsize=(12, 6))
