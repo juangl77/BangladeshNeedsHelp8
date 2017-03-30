@@ -50,7 +50,7 @@ class RoadData():
 
 class Traffic():
 	percentageDuringRush = 0.5
-	numberRushHours = 8
+	numberRushHours = 6
 
 	def __init__(self, truck=0, bus=0, passenger=0):
 		self.truck = truck

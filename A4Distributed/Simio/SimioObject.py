@@ -63,13 +63,21 @@ class MidPathSinksObject(SimioObject):
 class SourcesObject(SimioObject):
 	def __init__(self, objectClass, objectName, location, lrp, traffic, road, scalingFactor):
 		SimioObject.__init__(self, objectClass, objectName, location, lrp, road)
-		self.rushInterarrivalTimeTruck = (1.0/(traffic.truck/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
-		self.rushInterarrivalTimeBus = (1.0/(traffic.bus/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
-		self.rushInterarrivalTimePassenger = (1.0/(traffic.passenger/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
+		# self.rushInterarrivalTimeTruck = (1.0/(traffic.truck/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
+		# self.rushInterarrivalTimeBus = (1.0/(traffic.bus/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
+		# self.rushInterarrivalTimePassenger = (1.0/(traffic.passenger/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
+		#
+		# self.normalInterarrivalTimeTruck = (1.0/(traffic.truck/scalingFactor*(1-traffic.percentageDuringRush)))*(24-traffic.numberRushHours)
+		# self.normalInterarrivalTimeBus = (1.0/(traffic.bus/scalingFactor*(1-traffic.percentageDuringRush)))*(24-traffic.numberRushHours)
+		# self.normalInterarrivalTimePassenger = (1.0/(traffic.passenger/scalingFactor*(1-traffic.percentageDuringRush)))*(24-traffic.numberRushHours)
 
-		self.normalInterarrivalTimeTruck = (1.0/(traffic.truck/scalingFactor*(1-traffic.percentageDuringRush)))*(24-traffic.numberRushHours)
-		self.normalInterarrivalTimeBus = (1.0/(traffic.bus/scalingFactor*(1-traffic.percentageDuringRush)))*(24-traffic.numberRushHours)
-		self.normalInterarrivalTimePassenger = (1.0/(traffic.passenger/scalingFactor*(1-traffic.percentageDuringRush)))*(24-traffic.numberRushHours)
+		self.rushInterarrivalTimeTruck = (1.0/(traffic.truck*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
+		self.rushInterarrivalTimeBus = (1.0/(traffic.bus*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
+		self.rushInterarrivalTimePassenger = (1.0/(traffic.passenger*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
+
+		self.normalInterarrivalTimeTruck = (1.0/(traffic.truck*(1-traffic.percentageDuringRush)))/(24/(24-traffic.numberRushHours))
+		self.normalInterarrivalTimeBus = (1.0/(traffic.bus*(1-traffic.percentageDuringRush)))/(24/(24-traffic.numberRushHours))
+		self.normalInterarrivalTimePassenger = (1.0/(traffic.passenger*(1-traffic.percentageDuringRush)))/(24/(24-traffic.numberRushHours))
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):
 		super(SourcesObject, self).writeToWorksheet(worksheet, columnMapping, index)
@@ -113,17 +121,6 @@ class MidPathSourcesObject(SourcesObject):
 		worksheet.write_string(columnMapping["MaximumArrivalsTruck"].format(index), self.maximumArrivalsTruck)
 		worksheet.write_string(columnMapping["MaximumArrivalsBus"].format(index), self.maximumArrivalsBus)
 		worksheet.write_string(columnMapping["MaximumArrivalsPassenger"].format(index), self.maximumArrivalsPassenger)
-
-# class DhakaObject(SimioObject):
-# 	def __init__(self, location, lrp, entityType = "SourceEntity"):
-# 		SimioObject.__init__(self, "Source", "Dhaka", location, lrp)
-# 		# self.interarrivalTime = interarrivalTime
-# 		self.entityType = entityType
-#
-# 	def writeToWorksheet(self, worksheet, columnMapping, index):
-# 		super(DhakaObject, self).writeToWorksheet(worksheet, columnMapping, index)
-# 		# worksheet.write_number(columnMapping["InterarrivalTime"].format(index), self.interarrivalTime)
-# 		worksheet.write_string(columnMapping["EntityType"].format(index), self.entityType)
 
 class BridgeObject(SimioObject):
 	def __init__(self, road, location, lrp, category, length):
