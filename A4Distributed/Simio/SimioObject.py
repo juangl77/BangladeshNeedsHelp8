@@ -65,6 +65,7 @@ class SourcesObject(SimioObject):
 		SimioObject.__init__(self, objectClass, objectName, location, lrp, road)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		self.rushInterarrivalTimeTruck = (1.0/(traffic.truck/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
 		self.rushInterarrivalTimeBus = (1.0/(traffic.bus/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
 		self.rushInterarrivalTimePassenger = (1.0/(traffic.passenger/scalingFactor*traffic.percentageDuringRush))*traffic.numberRushHours
@@ -84,6 +85,9 @@ class SourcesObject(SimioObject):
 =======
 		
 >>>>>>> a55fd8e90ff598b946e83e692c8aff999543845a
+=======
+
+>>>>>>> 6a706a22753280a3a12d8b2987667591f6914935
 		self.rushInterarrivalTimeTruck = (1.0/(traffic.truck*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
 		self.rushInterarrivalTimeBus = (1.0/(traffic.bus*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
 		self.rushInterarrivalTimePassenger = (1.0/(traffic.passenger*traffic.percentageDuringRush))/(24/traffic.numberRushHours)
@@ -183,7 +187,7 @@ class BridgeObject(SimioObject):
 
 	def writeToWorksheet(self, worksheet, columnMapping, index):
 		super(BridgeObject, self).writeToWorksheet(worksheet, columnMapping, index)
-		worksheet.write_string(columnMapping["lrp"].format(index), self.category)
+		worksheet.write_string(columnMapping["LRPName"].format(index), self.lrp)
 		worksheet.write_string(columnMapping["Category"].format(index), self.category)
 		worksheet.write_number(columnMapping["BridgeLength"].format(index), self.length)
 		worksheet.write_string(columnMapping["InitialTravelerCapacity"].format(index), self.initialTravelerCapacity)

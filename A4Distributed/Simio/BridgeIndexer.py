@@ -20,12 +20,12 @@ class BridgeIndexer():
 
 		return None
 
-	def addBridgeToData(self, bridgeNodeData, length, condition):
+	def addBridgeToData(self, bridgeNodeData, length, category):
 		newBridge = BridgeData({
 			'road':bridgeNodeData.road,
 			'lrp':bridgeNodeData.lrp,
 			'length':length,
-			'condition':condition,
+			'category':category,
 			'lat':bridgeNodeData.lat,
 			'lon':bridgeNodeData.lon,
 			'constructionYear':'-1',

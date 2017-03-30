@@ -1,13 +1,12 @@
-import os
-import csv
 import pandas
+from sqlalchemy import create_engine
 
 class BridgeData():
 	def __init__(self, row):
 		self.road = row['road']
 		self.lrp = row['lrp'].strip().upper()
 		self.length = row['length']
-		self.condition = row['condition']
+		self.category = row['category']
 		self.lat = row['lat']
 		self.lon = row['lon']
 		self.constructionYear = row['constructionYear']
@@ -24,7 +23,7 @@ class BridgeData():
 			'road':self.road,
 			'lrp':self.lrp,
 			'length':self.length,
-			'condition':self.condition,
+			'category':self.category,
 			'lat':self.lat,
 			'lon':self.lon,
 			'constructionYear':self.constructionYear
@@ -94,34 +93,31 @@ class TrafficData():
 		self.rightTraffic = Traffic()
 
 class DataReader():
-	def __init__(self, bridgeDataPath, roadDataPath, widthDataPath, trafficDataPath):
-		self.bridgeDataPath = bridgeDataPath
-		self.roadDataPath = roadDataPath
-		self.widthDataPath = widthDataPath
-		self.trafficDataPath = trafficDataPath
+	def __init__(self,username,password,database):
+		self.database = database
+		self.engine = create_engine('mysql+mysqlconnector://'+ username + ':' + password + '@localhost/'+database)
 
 	def readBridges(self):
 		bridges = []
 
-		with open(self.bridgeDataPath) as csvfile:
-			reader = csv.DictReader(csvfile)
-			for row in reader:
-				bridges.append(BridgeData(row))
+		df = pandas.read_sql('SELECT * FROM '+self.database+'.bridges', con=self.engine)
+		for index, row in df.iterrows():
+			bridges.append(BridgeData(row.to_dict()))
+
 		return bridges
 
 	def readRoads(self):
 		roads = []
 
-		with open(self.roadDataPath) as csvfile:
-			reader = csv.DictReader(csvfile)
-			for row in reader:
-				roads.append(RoadData(row))
+		df = pandas.read_sql('SELECT * FROM '+self.database+'.roads', con=self.engine)
+		for index, row in df.iterrows():
+			roads.append(RoadData(row.to_dict()))
 		return roads
 
 	def readTraffic(self):
 		trafficEntries = []
 
-		df = pandas.read_csv(self.trafficDataPath)
+		df = pandas.read_sql('SELECT * FROM '+self.database+'.traffic', con=self.engine)
 		for linkId, group in df.groupby('linkId'):
 			for end, group in group.groupby('width_end'):
 				trafficEntry = TrafficData(dict(group.iloc[0]))

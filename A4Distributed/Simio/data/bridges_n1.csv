@@ -1,4 +1,4 @@
-road,km,type,lrp,name,length,condition,structureNr,roadName,chainage,width,constructionYear,spans,zone,circle,division,sub-division,lat,lon,EstimatedLoc
+road,km,type,lrp,name,length,category,structureNr,roadName,chainage,width,constructionYear,spans,zone,circle,division,sub-division,lat,lon,EstimatedLoc
 N1,1.8,Box Culvert,LRP001a,.,11.3,A,117861,Dhaka (Jatrabari)-Comilla (Mainamati)-Chittagong-Teknaf Road,1.8,19.5,2005,2,Dhaka,Dhaka,Narayanganj,Narayanganj-1,23.69873866,90.45886108,interpolate
 N1,4.925,Box Culvert,LRP004b,.,6.6,A,117862,Dhaka (Jatrabari)-Comilla (Mainamati)-Chittagong-Teknaf Road,4.925,35.4,2006,1,Dhaka,Dhaka,Narayanganj,Narayanganj-1,23.69466384,90.48777492,interpolate
 N1,8.976,PC Girder Bridge,LRP008b,Kanch pur Bridge.,394.23,A,119889,Dhaka (Jatrabari)-Comilla (Mainamati)-Chittagong-Teknaf Road,8.976,,,,Dhaka,Dhaka,Narayanganj,Narayanganj-1,23.70505989,90.52321415,interpolate
