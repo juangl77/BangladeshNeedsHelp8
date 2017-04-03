@@ -22,9 +22,9 @@ class Database(object):
 
 	def latestTime(self):
 		command = 'SELECT * FROM {0}.{1};'
-		frame = pd.read_sql(command.format('Discrete', '`current_time`'), con=self.connection)
+		frame = pd.read_sql(command.format('Discrete', '`simulationstatus`'), con=self.connection)
 
-		return int(frame.to_dict(orient='records')[0]['current_time'])
+		return int(frame.to_dict(orient='records')[0]['EventCount'])
 
 	def traffic(self, time):
 		command = 'SELECT * FROM {0}.{1} WHERE {0}.{1}.SimulationTime = {2};'
