@@ -14,13 +14,17 @@ class Database(object):
 			database=self.database,
 			user=self.user,
 			password=self.password)
+		self.connection.autocommit = True
 		self.cursor = self.connection.cursor()
 
 	def disconnect(self):
 		self.connection.close()
 
 	def latestTime(self):
-		return 0
+		command = 'SELECT * FROM {0}.{1};'
+		frame = pd.read_sql(command.format('Discrete', '`current_time`'), con=self.connection)
+
+		return int(frame.to_dict(orient='records')[0]['current_time'])
 
 	def traffic(self, time):
 		command = 'SELECT * FROM {0}.{1} WHERE {0}.{1}.SimulationTime = {2};'

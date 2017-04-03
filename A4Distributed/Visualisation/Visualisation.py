@@ -83,7 +83,7 @@ def plot_broken_bridges(gridspec, x, y5, ticks):
 def plot_line(sub_plot, tick, ymin, ymax):
 	sub_plot.plot([tick,tick],[ymin,ymax],color='black',linestyle=':',linewidth=0.5)
 
-def plot_traffic_density(data):
+def plot_traffic_density(fig, data):
 	TimeInSystem = data['average_waiting_time'] 
 
 	x = data['id']
@@ -94,7 +94,6 @@ def plot_traffic_density(data):
 	y5 = data['bridge_status']
 
 	# Two subplots, the axes array is 1-d
-	fig = plt.figure(figsize=(15, 8))
 	gs = gridspec.GridSpec(3, 1, height_ratios=[5,0.6,2])   
 
 	len_x = len(x)
