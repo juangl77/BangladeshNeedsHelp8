@@ -34,34 +34,26 @@ class SimioBridgeLink(BaseSimioLink):
 class MidPathSourcesLink(BaseSimioLink):
 	def __init__(self, road, startLRP, endLRP):
 		BaseSimioLink.__init__(self)
-<<<<<<< HEAD
-<<<<<<< HEAD
-		self.linkClass='TimePath'
-=======
-		self.linkClass='Connector'
->>>>>>> 8607025440f53989a931ff7daab06d7ddee1e71b
-=======
-		self.linkClass='Connector'
->>>>>>> a55fd8e90ff598b946e83e692c8aff999543845a
 		self.linkName = road+"_"+startLRP+"_"+endLRP
 		self.fromNode = startLRP
 		self.toNode = road+"_"+endLRP
+		self.drawnToScale = "False"
+
+	def writeToWorksheet(self, worksheet, columnMapping, index):
+		super(MidPathSourcesLink, self).writeToWorksheet(worksheet, columnMapping, index)
+		worksheet.write_number(columnMapping["LogicalLength"].format(index), 0)
 
 class MidPathSinksLink(BaseSimioLink):
 	def __init__(self, road, startLRP, endLRP):
 		BaseSimioLink.__init__(self)
-<<<<<<< HEAD
-<<<<<<< HEAD
-		self.linkClass='TimePath'
-=======
-		self.linkClass='Connector'
->>>>>>> 8607025440f53989a931ff7daab06d7ddee1e71b
-=======
-		self.linkClass='Connector'
->>>>>>> a55fd8e90ff598b946e83e692c8aff999543845a
 		self.linkName = road+"_"+startLRP+"_"+endLRP
 		self.fromNode = road+"_"+startLRP
 		self.toNode = endLRP
+		self.drawnToScale = "False"
+
+	def writeToWorksheet(self, worksheet, columnMapping, index):
+		super(MidPathSinksLink, self).writeToWorksheet(worksheet, columnMapping, index)
+		worksheet.write_number(columnMapping["LogicalLength"].format(index), 0)
 
 class StartSimioLink(BaseSimioLink):
 	def __init__(self, road, fromNode, lrp):

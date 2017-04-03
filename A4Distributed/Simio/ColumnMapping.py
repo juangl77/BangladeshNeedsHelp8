@@ -33,7 +33,7 @@ def initObjects():
 def initLinks():
 	global linkColumnNames
 	linkColumnNames = [
-		"Link Class", "Link Name", "From Node", "To Node", "Network", "Width", "Height", "Type", "DrawnToScale", "AllowPassing"
+		"Link Class", "Link Name", "From Node", "To Node", "Network", "Width", "Height", "Type", "DrawnToScale", "AllowPassing", "LogicalLength"
 	]
 
 	global linkColumnMapping
