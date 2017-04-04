@@ -19,7 +19,7 @@ def plot_traffic_density_per_category(gridspec, x, y2, y3, y4, ticks):
 	(stacked1, stacked2) = stacks(y2, y3, y4)
 
 	ax0 = plt.subplot(gridspec[0])
-	
+
 	ax0.fill_between(x, 0, y2, label = 'Trucks', color = '#44FFD1')
 	ax0.fill_between(x, y2, stacked1, label = 'Busses', color = '#8F2D56')
 	ax0.fill_between(x, stacked1, stacked2, label = 'Passenger Vehicles', color = '#00A8E8')
@@ -62,6 +62,7 @@ def plot_average_time_on_segment(gridspec, x, y1, TimeInSystem, ticks):
 
 def plot_broken_bridges(gridspec, x, y5, ticks):
 	ax2 = plt.subplot(gridspec[2])
+
 	p2 = ax2.bar(x, y5, width = 1, color='black', label = 'Broken bridges', align = 'edge')
 
 	xmin = x.min()
@@ -84,7 +85,7 @@ def plot_line(sub_plot, tick, ymin, ymax):
 	sub_plot.plot([tick,tick],[ymin,ymax],color='black',linestyle=':',linewidth=0.5)
 
 def plot_traffic_density(fig, data):
-	TimeInSystem = data['average_waiting_time'] 
+	TimeInSystem = data['average_waiting_time']
 
 	x = data['id']
 	y1 = np.ones(len(data['id']))
@@ -94,15 +95,24 @@ def plot_traffic_density(fig, data):
 	y5 = data['bridge_status']
 
 	# Two subplots, the axes array is 1-d
-	gs = gridspec.GridSpec(3, 1, height_ratios=[5,0.6,2])   
+	gs = gridspec.GridSpec(3, 1, height_ratios=[5,0.6,2])
 
 	len_x = len(x)
 	places = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.625, 0.75, 0.875, 1]
-	ticks = [x[min(int(len_x*place), len_x-1)] for place in places]
 
-	ax0 = plot_traffic_density_per_category(gs, x, y2, y3, y4, ticks[1:])
-	(ax1, p1) = plot_average_time_on_segment(gs, x, y1, TimeInSystem, ticks[1:])
-	(ax2, p2) = plot_broken_bridges(gs, x, y5, ticks[1:])
+	if len_x == 0:
+		ticks = []
+	else:
+		ticks = [x[min(int(len_x*place), len_x-1)] for place in places]
+
+	if not x.empty:
+		ax0 = plot_traffic_density_per_category(gs, x, y2, y3, y4, ticks[1:])
+		(ax1, p1) = plot_average_time_on_segment(gs, x, y1, TimeInSystem, ticks[1:])
+		(ax2, p2) = plot_broken_bridges(gs, x, y5, ticks[1:])
+
+		# Colorbar for Total vulnerability graph
+		cb = fig.colorbar(p1, ax=ax2, orientation='horizontal', pad=0.6)
+		cb.set_label('Average Time on Segment')
 
 	fig.subplots_adjust(hspace=0.25, left=0.07, right=0.93)
 
@@ -110,7 +120,3 @@ def plot_traffic_density(fig, data):
 
 	names = ['Dhaka','Homna','Comilla','Bangadda','Narayanhat','Chittagong','Chandanaish','Chakaria','Umkhali','Sabrang']
 	plt.xticks(ticks,names)
-
-	# Colorbar for Total vulnerability graph    
-	cb = fig.colorbar(p1, ax=ax2, orientation='horizontal', pad=0.6)
-	cb.set_label('Average Time on Segment')

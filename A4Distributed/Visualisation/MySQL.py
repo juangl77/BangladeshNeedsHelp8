@@ -7,10 +7,13 @@ class Database(object):
 		self.database = database
 		self.user = user
 		self.password = password
-		self.current_time = -1
+
+		self.paths = 'bangladeshroadpaths'
+		self.bridges = 'bangladeshroadbridges'
+		self.status = 'simulationstatus'
 
 	def connect(self):
-		self.connection = sql.connect(host=self.host, 
+		self.connection = sql.connect(host=self.host,
 			database=self.database,
 			user=self.user,
 			password=self.password)
@@ -22,33 +25,38 @@ class Database(object):
 
 	def latestTime(self):
 		command = 'SELECT * FROM {0}.{1};'
-		frame = pd.read_sql(command.format('Discrete', '`simulationstatus`'), con=self.connection)
+		frame = pd.read_sql(command.format(self.database, self.status), con=self.connection)
 
 		return int(frame.to_dict(orient='records')[0]['EventCount'])
 
 	def traffic(self, time):
 		command = 'SELECT * FROM {0}.{1} WHERE {0}.{1}.SimulationTime = {2};'
-		return pd.read_sql(command.format('Discrete', 'paths', time), con=self.connection)
+		frame = pd.read_sql(command.format(self.database, self.paths, time), con=self.connection)
+		return frame
 
 	def brokenBridges(self, time):
 		command = 'SELECT {0}.{1}.BridgeName FROM {0}.{1} WHERE {0}.{1}.SimulationTime = {2} and {0}.{1}.IsBridgeBroken;'
-		return pd.read_sql(command.format('Discrete', 'bridges', time), con=self.connection)	
+
+		frame =  pd.read_sql(command.format(self.database, self.bridges, time), con=self.connection)
+		return list(map(lambda x: str(x[3:]).lower().strip(), list(frame['BridgeName'])))
 
 	def bridgeStatus(self, path_names, broken_bridges):
 		bridge_status = []
 		for path_name in path_names:
 			if path_name.startswith('bridge'):
 				(_,_,lrp_s,lrp_e) = path_name.split("_")
-				if lrp_s in broken_bridges['BridgeName']:
+
+				if lrp_s.lower() in broken_bridges:
 					bridge_status.append(1)
-				elif lrp_e in broken_bridges['BridgeName']:
+				elif lrp_e.lower() in broken_bridges:
 					bridge_status.append(1)
 				else:
 					bridge_status.append(0)
 			else:
 				bridge_status.append(0)
 
-		return pd.DataFrame({'path_name':path_names, 'bridge_status': bridge_status})
+		frame = pd.DataFrame({'path_name':path_names, 'bridge_status': bridge_status})
+		return frame
 
 	def averageWaitingTime(self, traffic_data, categories):
 		waiting_times = []
@@ -63,20 +71,19 @@ class Database(object):
 				for category in categories:
 					category_name = category.replace(' ', '')
 					total_time += (row['Average{0}WaitingTime'.format(category_name)] * row['{0}AverageNumberWaiting'.format(category_name)])
-				waiting_times.append(total_time / number_of_vehicles)				
+				waiting_times.append(total_time / number_of_vehicles)
 
 		return waiting_times
 
 	def dataPerSegment(self, time):
 		traffic = self.traffic(time)
 		broken_bridges = self.brokenBridges(time)
-
 		path_names = list(traffic['PathName'])
 
 		data = pd.DataFrame()
 		data['id'] = list(range(0, len(path_names)))
 		data['path_name'] = path_names
-		
+
 		bridge_status = self.bridgeStatus(path_names, broken_bridges)
 		data = pd.merge(data, bridge_status, on='path_name')
 
